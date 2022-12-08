@@ -24,6 +24,12 @@ public class PaintPane extends BorderPane {
 	Color fillColor = Color.YELLOW;
 
 	// Botones Barra Izquierda
+	/*
+****************IDEA********************
+	FigureToggleButton clase abstracta/ Interfaz que extiende a ToggleButton
+****************IDEA********************
+
+	 * */
 	ToggleButton selectionButton = new ToggleButton("Seleccionar");
 	ToggleButton rectangleButton = new ToggleButton("Rectángulo");
 	ToggleButton circleButton = new ToggleButton("Círculo");
@@ -136,6 +142,11 @@ public class PaintPane extends BorderPane {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
+				/*
+				should be
+				selectedFigure.move(diffX, diffY);
+				redrawCanvas();
+				 */
 				if(selectedFigure instanceof Rectangle) {
 					Rectangle rectangle = (Rectangle) selectedFigure;
 					rectangle.getTopLeft().x += diffX;
@@ -173,6 +184,8 @@ public class PaintPane extends BorderPane {
 		setRight(canvas);
 	}
 
+
+
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(Figure figure : canvasState.figures()) {
@@ -182,6 +195,11 @@ public class PaintPane extends BorderPane {
 				gc.setStroke(lineColor);
 			}
 			gc.setFill(fillColor);
+			/*
+			****************IDEA********************
+				METODO DE FIGURE que devuel
+			****************IDEA********************
+			 */
 			if(figure instanceof Rectangle) {
 				Rectangle rectangle = (Rectangle) figure;
 				gc.fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
@@ -207,6 +225,13 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
+
+
+	/*
+****************IDEA********************
+	figureBelongs METODO DE FIGURE
+****************IDEA********************
+	 */
 	boolean figureBelongs(Figure figure, Point eventPoint) {
 		boolean found = false;
 		if(figure instanceof Rectangle) {
