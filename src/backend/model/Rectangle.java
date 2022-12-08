@@ -22,4 +22,9 @@ public class Rectangle implements Figure {
 		return String.format("Rectángulo [ %s , %s ]", topLeft, bottomRight);
 	}
 
+	@Override
+	public void move(double diffX, double diffY) {
+		topLeft.move(diffX, diffY);
+		bottomRight.move(diffX, diffY);
+	}
 }

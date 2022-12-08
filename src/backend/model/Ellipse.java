@@ -2,8 +2,8 @@ package backend.model;
 
 public class Ellipse implements Figure {
 
-	protected final Point centerPoint;
-	protected final double sMayorAxis, sMinorAxis;
+	private final Point centerPoint;
+	private final double sMayorAxis, sMinorAxis;
 
 	public Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis) {
 		this.centerPoint = centerPoint;
@@ -28,4 +28,8 @@ public class Ellipse implements Figure {
 		return sMinorAxis;
 	}
 
+	@Override
+	public void move(double diffX, double diffY) {
+		centerPoint.move(diffX, diffY);
+	}
 }
