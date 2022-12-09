@@ -26,7 +26,6 @@ public class Point {
 		return Math.sqrt(Math.pow(distanceX(point),2) + Math.pow(distanceY(point),2));
 	}
 
-
 	public void move(double diffX, double diffY){
 		this.x += diffX;
 		this.y += diffY;

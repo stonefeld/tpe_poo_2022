@@ -10,7 +10,7 @@ package backend.model;
     Entendiendo que para cada tipo de Figura hay una relación entre estos 2 y los puntos que la caracterizan.
 */
 public abstract class Figure implements MovableSketch {
-    private Point startPoint, endPoint;
+    private final Point startPoint, endPoint;
 
     public Figure(Point startPoint, Point endPoint) {
         this.endPoint = endPoint;
@@ -25,6 +25,7 @@ public abstract class Figure implements MovableSketch {
     public double getWidth(){
         return endPoint.distanceX(startPoint);
     }
+
     public double getHeight(){
         return endPoint.distanceY(startPoint);
     }
@@ -36,6 +37,7 @@ public abstract class Figure implements MovableSketch {
     public static boolean isInvalid(Point startPoint, Point endPoint) {
         return (startPoint.getX() >= endPoint.getX() || startPoint.getY() >= endPoint.getY());
     }
+
     public Point getStartPoint() {
         return startPoint;
     }

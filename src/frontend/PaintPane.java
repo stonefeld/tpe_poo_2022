@@ -2,14 +2,11 @@ package frontend;
 
 import backend.CanvasState;
 import backend.model.*;
-import javafx.geometry.Insets;
-import javafx.scene.Cursor;
+import frontend.ui.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Toggle;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class PaintPane extends BorderPane {
@@ -20,22 +17,16 @@ public class PaintPane extends BorderPane {
 	// Canvas y relacionados
 	Canvas canvas = new Canvas(800, 600);
 	GraphicsContext gc = canvas.getGraphicsContext2D();
-	Color lineColor = Color.BLACK;
-	Color fillColor = Color.YELLOW;
+	Color lineColor = Color.BLACK, fillColor = Color.YELLOW;
 
 	// Botones Barra Izquierda
-	/*
-****************IDEA********************
-	FigureToggleButton clase abstracta/ Interfaz que extiende a ToggleButton
-****************IDEA********************
-
-	 * */
-	ToggleButton selectionButton = new ToggleButton("Seleccionar");
-	ToggleButton rectangleButton = new ToggleButton("Rectángulo");
-	ToggleButton circleButton = new ToggleButton("Círculo");
-	ToggleButton squareButton = new ToggleButton("Cuadrado");
-	ToggleButton ellipseButton = new ToggleButton("Elipse");
-	ToggleButton deleteButton = new ToggleButton("Borrar");
+	StyledTool selectionButton = new StyledTool("Seleccionar");
+	FigureStyledTool rectangleButton = new RectangleFigureStyledTool("Rectángulo");
+	FigureStyledTool circleButton = new CircleFigureStyledTool("Círculo");
+	FigureStyledTool squareButton = new SquareFigureStyledTool("Cuadrado");
+	FigureStyledTool ellipseButton = new EllipseFigureStyledTool("Elipse");
+	StyledTool deleteButton = new StyledTool("Borrar");
+	StyledButtonGroup buttonsBox;
 
 	// Dibujar una figura
 	Point startPoint;
@@ -49,55 +40,19 @@ public class PaintPane extends BorderPane {
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
-		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
-		ToggleGroup tools = new ToggleGroup();
-		for (ToggleButton tool : toolsArr) {
-			tool.setMinWidth(90);
-			tool.setToggleGroup(tools);
-			tool.setCursor(Cursor.HAND);
+
+		StyledTool[] figuresTools = { selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton };
+		buttonsBox = new StyledButtonGroup();
+		for (StyledTool tool : figuresTools) {
+			buttonsBox.addButton(tool);
 		}
-		VBox buttonsBox = new VBox(10);
-		buttonsBox.getChildren().addAll(toolsArr);
-		buttonsBox.setPadding(new Insets(5));
-		buttonsBox.setStyle("-fx-background-color: #999");
-		buttonsBox.setPrefWidth(100);
+
 		gc.setLineWidth(1);
 
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
 		});
-
-		canvas.setOnMouseReleased(event -> {
-			Point endPoint = new Point(event.getX(), event.getY());
-			if (startPoint == null) {
-				return;
-			}
-			if (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
-				return;
-			}
-
-
-			Figure newFigure = null;
-			if (rectangleButton.isSelected()) {
-				newFigure = new Rectangle(startPoint, endPoint);
-			} else if (circleButton.isSelected()) {
-				double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new Circle(startPoint, endPoint);
-			} else if (squareButton.isSelected()) {
-				double size = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new Square(startPoint, size);
-			} else if (ellipseButton.isSelected()) {
-				Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));
-				double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
-				double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
-				newFigure = new Ellipse(startPoint, endPoint);
-			} else {
-				return;
-			}
-			canvasState.addFigure(newFigure);
-			startPoint = null;
-			redrawCanvas();
-		});
+		canvas.setOnMouseReleased(this::onMouseReleased);
 
 		canvas.setOnMouseMoved(event -> {
 			Point eventPoint = new Point(event.getX(), event.getY());
@@ -148,19 +103,7 @@ public class PaintPane extends BorderPane {
 				selectedFigure.move(diffX, diffY);
 				redrawCanvas();
 				 */
-				if (selectedFigure instanceof Square) {
-					Square square = (Square) selectedFigure;
-					square.move(diffX, diffY);
-				} else if (selectedFigure instanceof Rectangle) {
-					Rectangle rectangle = (Rectangle) selectedFigure;
-					rectangle.move(diffX, diffY);
-				} else if (selectedFigure instanceof Circle) {
-					Circle circle = (Circle) selectedFigure;
-					circle.move(diffX, diffY);
-				} else if (selectedFigure instanceof Ellipse) {
-					Ellipse ellipse = (Ellipse) selectedFigure;
-					ellipse.move(diffX, diffY);
-				}
+				selectedFigure.move(diffX, diffY);
 				redrawCanvas();
 			}
 		});
@@ -177,8 +120,23 @@ public class PaintPane extends BorderPane {
 		setRight(canvas);
 	}
 
+	private void onMouseReleased(javafx.scene.input.MouseEvent event) {
+		Point endPoint = new Point(event.getX(), event.getY());
+		if (startPoint == null) {
+			return;
+		}
+		if (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
+			return;
+		}
+		Toggle selected = buttonsBox.getSelected();
+		if (selected != selectionButton && selected != deleteButton) {
+			canvasState.addFigure(((FigureStyledTool)selected).createFigure(startPoint, endPoint));
+		}
+		startPoint = null;
+		redrawCanvas();
+	}
 
-	void redrawCanvas() {
+	private void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for (Figure figure : canvasState.figures()) {
 			if (figure == selectedFigure) {
@@ -206,7 +164,6 @@ public class PaintPane extends BorderPane {
 						rectangle.getWidth(), rectangle.getHeight());
 			} else if (figure instanceof Circle) {
 				Circle circle = (Circle) figure;
-				double diameter = circle.getHeight();
 				gc.strokeOval(circle.getStartPoint().getX(), circle.getStartPoint().getY(), circle.getWidth(), circle.getHeight());
 				gc.fillOval(circle.getStartPoint().getX(), circle.getStartPoint().getY(), circle.getWidth(), circle.getHeight());
 			} else if (figure instanceof Ellipse) {
@@ -223,7 +180,7 @@ public class PaintPane extends BorderPane {
 	figureBelongs MÉTODO DE FIGURE
 ****************IDEA********************
 	 */
-	boolean figureBelongs(Figure figure, Point eventPoint) {
+	private boolean figureBelongs(Figure figure, Point eventPoint) {
 		boolean found = false;
 		if (figure instanceof Square) {
 			Square square = (Square) figure;
