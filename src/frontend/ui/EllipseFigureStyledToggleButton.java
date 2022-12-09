@@ -4,9 +4,9 @@ import backend.model.Ellipse;
 import backend.model.Figure;
 import backend.model.Point;
 
-public class EllipseFigureStyledTool extends FigureStyledTool {
+public class EllipseFigureStyledToggleButton extends FigureStyledToggleButton {
 
-	public EllipseFigureStyledTool(String description) {
+	public EllipseFigureStyledToggleButton(String description) {
 		super(description);
 	}
 

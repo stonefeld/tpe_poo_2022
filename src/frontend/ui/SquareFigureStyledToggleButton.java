@@ -4,9 +4,9 @@ import backend.model.Figure;
 import backend.model.Point;
 import backend.model.Square;
 
-public class SquareFigureStyledTool extends FigureStyledTool {
+public class SquareFigureStyledToggleButton extends FigureStyledToggleButton {
 
-	public SquareFigureStyledTool(String description) {
+	public SquareFigureStyledToggleButton(String description) {
 		super(description);
 	}
 

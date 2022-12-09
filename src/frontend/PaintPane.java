@@ -3,9 +3,11 @@ package frontend;
 import backend.CanvasState;
 import backend.model.*;
 import frontend.ui.*;
+import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Toggle;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
@@ -20,13 +22,13 @@ public class PaintPane extends BorderPane {
 	Color lineColor = Color.BLACK, fillColor = Color.YELLOW;
 
 	// Botones Barra Izquierda
-	StyledTool selectionButton = new StyledTool("Seleccionar");
-	FigureStyledTool rectangleButton = new RectangleFigureStyledTool("Rectángulo");
-	FigureStyledTool circleButton = new CircleFigureStyledTool("Círculo");
-	FigureStyledTool squareButton = new SquareFigureStyledTool("Cuadrado");
-	FigureStyledTool ellipseButton = new EllipseFigureStyledTool("Elipse");
-	StyledTool deleteButton = new StyledTool("Borrar");
-	StyledButtonGroup buttonsBox;
+	StyledToggleButton selectionButton = new StyledToggleButton("Seleccionar");
+	FigureStyledToggleButton rectangleButton = new RectangleFigureStyledToggleButton("Rectángulo");
+	FigureStyledToggleButton circleButton = new CircleFigureStyledToggleButton("Círculo");
+	FigureStyledToggleButton squareButton = new SquareFigureStyledToggleButton("Cuadrado");
+	FigureStyledToggleButton ellipseButton = new EllipseFigureStyledToggleButton("Elipse");
+	StyledButton deleteButton = new StyledButton("Borrar");
+	StyledToggleButtonGroup buttonsBox = new StyledToggleButtonGroup();
 
 	// Dibujar una figura
 	Point startPoint;
@@ -41,86 +43,31 @@ public class PaintPane extends BorderPane {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 
-		StyledTool[] figuresTools = { selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton };
-		buttonsBox = new StyledButtonGroup();
-		for (StyledTool tool : figuresTools) {
-			buttonsBox.addButton(tool);
-		}
+		StyledToggleButton[] figuresTools = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton};
+		buttonsBox.addAll(figuresTools);
+		buttonsBox.addButton(deleteButton);
 
 		gc.setLineWidth(1);
 
-		canvas.setOnMousePressed(event -> {
-			startPoint = new Point(event.getX(), event.getY());
-		});
-		canvas.setOnMouseReleased(this::onMouseReleased);
+		// Seteando los callbacks para el canvas
+		canvas.setOnMousePressed(this::onMousePressedCanvas);
+		canvas.setOnMouseReleased(this::onMouseReleasedCanvas);
+		canvas.setOnMouseMoved(this::onMouseMovedCanvas);
+		canvas.setOnMouseClicked(this::onMouseClickedCanvas);
+		canvas.setOnMouseDragged(this::onMouseDraggedCanvas);
 
-		canvas.setOnMouseMoved(event -> {
-			Point eventPoint = new Point(event.getX(), event.getY());
-			boolean found = false;
-			StringBuilder label = new StringBuilder();
-			for (Figure figure : canvasState.figures()) {
-				if (figureBelongs(figure, eventPoint)) {
-					found = true;
-					label.append(figure.toString());
-				}
-			}
-			if (found) {
-				statusPane.updateStatus(label.toString());
-			} else {
-				statusPane.updateStatus(eventPoint.toString());
-			}
-		});
-
-		canvas.setOnMouseClicked(event -> {
-			if (selectionButton.isSelected()) {
-				Point eventPoint = new Point(event.getX(), event.getY());
-				boolean found = false;
-				StringBuilder label = new StringBuilder("Se seleccionó: ");
-				for (Figure figure : canvasState.figures()) {
-					if (figureBelongs(figure, eventPoint)) {
-						found = true;
-						selectedFigure = figure;
-						label.append(figure.toString());
-					}
-				}
-				if (found) {
-					statusPane.updateStatus(label.toString());
-				} else {
-					selectedFigure = null;
-					statusPane.updateStatus("Ninguna figura encontrada");
-				}
-				redrawCanvas();
-			}
-		});
-
-		canvas.setOnMouseDragged(event -> {
-			if (selectionButton.isSelected()) {
-				Point eventPoint = new Point(event.getX(), event.getY());
-				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
-				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
-				/*
-				should be
-				selectedFigure.move(diffX, diffY);
-				redrawCanvas();
-				 */
-				selectedFigure.move(diffX, diffY);
-				redrawCanvas();
-			}
-		});
-
-		deleteButton.setOnAction(event -> {
-			if (selectedFigure != null) {
-				canvasState.deleteFigure(selectedFigure);
-				selectedFigure = null;
-				redrawCanvas();
-			}
-		});
+		// Setenado el callback para el boton de borrado
+		deleteButton.setOnAction(this::onActionDeleteButton);
 
 		setLeft(buttonsBox);
 		setRight(canvas);
 	}
 
-	private void onMouseReleased(javafx.scene.input.MouseEvent event) {
+	private void onMousePressedCanvas(MouseEvent event) {
+		startPoint = new Point(event.getX(), event.getY());
+	}
+
+	private void onMouseReleasedCanvas(MouseEvent event) {
 		Point endPoint = new Point(event.getX(), event.getY());
 		if (startPoint == null) {
 			return;
@@ -129,11 +76,68 @@ public class PaintPane extends BorderPane {
 			return;
 		}
 		Toggle selected = buttonsBox.getSelected();
-		if (selected != selectionButton && selected != deleteButton) {
-			canvasState.addFigure(((FigureStyledTool)selected).createFigure(startPoint, endPoint));
+		if (selected != selectionButton) {
+			canvasState.addFigure(((FigureStyledToggleButton) selected).createFigure(startPoint, endPoint));
 		}
 		startPoint = null;
 		redrawCanvas();
+	}
+
+	private void onMouseMovedCanvas(MouseEvent event) {
+		Point eventPoint = new Point(event.getX(), event.getY());
+		boolean found = false;
+		StringBuilder label = new StringBuilder();
+		for (Figure figure : canvasState.figures()) {
+			if (figureBelongs(figure, eventPoint)) {
+				found = true;
+				label.append(figure.toString());
+			}
+		}
+		if (found) {
+			statusPane.updateStatus(label.toString());
+		} else {
+			statusPane.updateStatus(eventPoint.toString());
+		}
+	}
+
+	private void onMouseClickedCanvas(MouseEvent event) {
+		if (selectionButton.isSelected()) {
+			Point eventPoint = new Point(event.getX(), event.getY());
+			boolean found = false;
+			StringBuilder label = new StringBuilder("Se seleccionó: ");
+			for (Figure figure : canvasState.figures()) {
+				if (figureBelongs(figure, eventPoint)) {
+					found = true;
+					selectedFigure = figure;
+					label.append(figure.toString());
+				}
+			}
+			if (found) {
+				statusPane.updateStatus(label.toString());
+			} else {
+				selectedFigure = null;
+				statusPane.updateStatus("Ninguna figura encontrada");
+			}
+			redrawCanvas();
+		}
+	}
+
+	private void onMouseDraggedCanvas(MouseEvent event) {
+		if (selectionButton.isSelected()) {
+			Point eventPoint = new Point(event.getX(), event.getY());
+			double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
+			double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
+			selectedFigure.move(diffX, diffY);
+			redrawCanvas();
+		}
+	}
+
+	private void onActionDeleteButton(ActionEvent event) {
+		if (selectedFigure != null) {
+			canvasState.deleteFigure(selectedFigure);
+			selectedFigure = null;
+			redrawCanvas();
+		}
 	}
 
 	private void redrawCanvas() {
@@ -176,9 +180,9 @@ public class PaintPane extends BorderPane {
 
 
 	/*
-****************IDEA********************
-	figureBelongs MÉTODO DE FIGURE
-****************IDEA********************
+	****************IDEA********************
+		figureBelongs MÉTODO DE FIGURE
+	****************IDEA********************
 	 */
 	private boolean figureBelongs(Figure figure, Point eventPoint) {
 		boolean found = false;
@@ -193,7 +197,7 @@ public class PaintPane extends BorderPane {
 		} else if (figure instanceof Circle) {
 			Circle circle = (Circle) figure;
 			found = Math.sqrt(Math.pow(circle.getCenterPoint().getX() - eventPoint.getX(), 2) +
-					Math.pow(circle.getCenterPoint().getY() - eventPoint.getY(), 2)) < circle.getWidth()/2;
+					Math.pow(circle.getCenterPoint().getY() - eventPoint.getY(), 2)) < circle.getWidth() / 2;
 		} else if (figure instanceof Ellipse) {
 			Ellipse ellipse = (Ellipse) figure;
 			// Nota: Fórmula aproximada. No es necesario corregirla.
