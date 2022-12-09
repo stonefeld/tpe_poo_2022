@@ -1,30 +1,19 @@
 package backend.model;
 
-public class Rectangle implements Figure {
+public class Rectangle extends Figure {
 
-	private final Point topLeft, bottomRight;
-	
-	public Rectangle(Point topLeft, Point bottomRight) {
-		this.topLeft = topLeft;
-		this.bottomRight = bottomRight;
+
+	public Rectangle(Point startPoint, Point endPoint) {
+		super(startPoint, endPoint);
 	}
-
-	public Point getTopLeft() {
-		return topLeft;
-	}
-
-	public Point getBottomRight() {
-		return bottomRight;
-	}
-
 	@Override
 	public String toString() {
-		return String.format("Rectángulo [ %s , %s ]", topLeft, bottomRight);
+		return String.format("Rectángulo [ %s , %s ]", getStartPoint(), getEndPoint());
 	}
 
 	@Override
-	public void move(double diffX, double diffY) {
-		topLeft.move(diffX, diffY);
-		bottomRight.move(diffX, diffY);
+	public boolean belongsToSketch(Point point) {
+		return (point.getX() > getStartPoint().getX() && point.getX() < getEndPoint().getX() &&
+				point.getY() > getStartPoint().getY() && point.getY() < getEndPoint().getY());
 	}
 }
