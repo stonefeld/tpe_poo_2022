@@ -19,7 +19,11 @@ public class Point {
 		return Math.abs(x - p2.getX());
 	}
 	public double distanceY(Point p2){
-		return Math.abs( y - p2.getY() );
+		return Math.abs(y - p2.getY());
+	}
+
+	public double distance(Point point){
+		return Math.sqrt(Math.pow(distanceX(point),2) + Math.pow(distanceY(point),2));
 	}
 
 

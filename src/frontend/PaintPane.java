@@ -90,7 +90,7 @@ public class PaintPane extends BorderPane {
 				Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));
 				double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
 				double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
-				newFigure = new Ellipse(centerPoint, endPoint);
+				newFigure = new Ellipse(startPoint, endPoint);
 			} else {
 				return;
 			}
@@ -206,13 +206,13 @@ public class PaintPane extends BorderPane {
 						rectangle.getWidth(), rectangle.getHeight());
 			} else if (figure instanceof Circle) {
 				Circle circle = (Circle) figure;
-				double diameter = getHeight();
-				gc.fillOval(circle.getCenterPoint().getX() - circle.getWidth()/2, circle.getCenterPoint().getY() - circle.getWidth()/2, diameter, diameter);
-				gc.strokeOval(circle.getCenterPoint().getX() - circle.getWidth()/2, circle.getCenterPoint().getY() - circle.getWidth()/2, diameter, diameter);
+				double diameter = circle.getHeight();
+				gc.strokeOval(circle.getStartPoint().getX(), circle.getStartPoint().getY(), circle.getWidth(), circle.getHeight());
+				gc.fillOval(circle.getStartPoint().getX(), circle.getStartPoint().getY(), circle.getWidth(), circle.getHeight());
 			} else if (figure instanceof Ellipse) {
 				Ellipse ellipse = (Ellipse) figure;
-				gc.strokeOval(ellipse.getCenterPoint().getX() - (ellipse.getWidth() / 2), ellipse.getCenterPoint().getY() - (ellipse.getHeight() / 2), ellipse.getWidth(), ellipse.getHeight());
-				gc.fillOval(ellipse.getCenterPoint().getX() - (ellipse.getWidth() / 2), ellipse.getCenterPoint().getY() - (ellipse.getHeight() / 2), ellipse.getWidth(), ellipse.getHeight());
+				gc.strokeOval(ellipse.getStartPoint().getX(), ellipse.getStartPoint().getY(), ellipse.getWidth(), ellipse.getHeight());
+				gc.fillOval(ellipse.getStartPoint().getX(), ellipse.getStartPoint().getY(), ellipse.getWidth(), ellipse.getHeight());
 			}
 		}
 	}
