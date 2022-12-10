@@ -13,6 +13,12 @@ public class FigureStyle {
 		this.fillColor = fillColor;
 	}
 
+	public FigureStyle(Color borderColor, Color fillColor, int borderWidth) {
+		this.borderColor = borderColor;
+		this.fillColor = fillColor;
+		this.borderWidth = borderWidth;
+	}
+
 	public void setBorderColor(Color color) {
 		borderColor = color;
 	}
@@ -42,7 +48,7 @@ public class FigureStyle {
 	}
 
 	public FigureStyle copy() {
-		return new FigureStyle(borderColor, fillColor);
+		return new FigureStyle(borderColor, fillColor, borderWidth);
 	}
 
 }

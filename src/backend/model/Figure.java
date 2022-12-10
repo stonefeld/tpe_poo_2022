@@ -31,8 +31,8 @@ public abstract class Figure implements MovableSketch {
 	/*
 	es static porque no necesito crear una instancia para determinar si 2 puntos son válidos para crear cualquier figura
 	 */
-	public static boolean isInvalid(Point startPoint, Point endPoint) {
-		return (startPoint.getX() >= endPoint.getX() || startPoint.getY() >= endPoint.getY());
+	public static boolean isValid(Point startPoint, Point endPoint) {
+		return startPoint != null && startPoint.getX() < endPoint.getX() && startPoint.getY() < endPoint.getY();
 	}
 
 	public Point getStartPoint() {

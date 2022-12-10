@@ -10,7 +10,7 @@ public class FigureRender<T extends Figure> {
 	private boolean selected = false;
 
 	public FigureRender(FigureStyle style, T figure) {
-		this.style = style;
+		this.style = style.copy();
 		this.figure = figure;
 	}
 
@@ -18,19 +18,22 @@ public class FigureRender<T extends Figure> {
 		return figure;
 	}
 
-	public boolean isSelected() {
-		return selected;
+	public FigureStyle getStyle() {
+		return style;
 	}
 
-	public void toggleSelected() {
-		selected = !selected;
+	public void select() {
+		selected = true;
 	}
 
-	public void drawSketch(GraphicsContext gc, boolean selected) {
+	public void deselect() {
+		selected = false;
+	}
+
+	public void drawSketch(GraphicsContext gc) {
 		gc.setLineWidth(style.getBorderWidth());
 		gc.setStroke(selected ? style.getSelColor() : style.getBorderColor());
 		gc.setFill(style.getFillColor());
-		figure.drawSketch(gc);
 	}
 
 }

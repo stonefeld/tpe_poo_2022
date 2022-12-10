@@ -9,6 +9,7 @@ import java.util.List;
 public class CanvasState {
 
 	private final List<FigureRender<? extends Figure>> list = new ArrayList<>();
+	private FigureRender<? extends Figure> selectedFigure;
 
 	public void addFigure(FigureRender<? extends Figure> figure) {
 		list.add(figure);
@@ -25,6 +26,23 @@ public class CanvasState {
 				return;
 			}
 		}
+	}
+
+	public void deleteSelected() {
+		deleteFigure(selectedFigure);
+		selectedFigure = null;
+	}
+
+	public void selectFigure(FigureRender<? extends Figure> figure) {
+		selectedFigure = figure;
+	}
+
+	public boolean existsSelected() {
+		return selectedFigure != null;
+	}
+
+	public FigureRender<? extends Figure> getSelectedFigure() {
+		return selectedFigure;
 	}
 
 	public Iterable<FigureRender<? extends Figure>> figures() {

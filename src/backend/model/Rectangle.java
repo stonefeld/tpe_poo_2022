@@ -1,7 +1,5 @@
 package backend.model;
 
-import javafx.scene.canvas.GraphicsContext;
-
 public class Rectangle extends Figure {
 
 	public Rectangle(Point startPoint, Point endPoint) {
@@ -17,12 +15,6 @@ public class Rectangle extends Figure {
 	public boolean belongsToSketch(Point point) {
 		return (point.getX() > getStartPoint().getX() && point.getX() < getEndPoint().getX() &&
 				point.getY() > getStartPoint().getY() && point.getY() < getEndPoint().getY());
-	}
-
-	@Override
-	public void drawSketch(GraphicsContext gc) {
-		gc.fillRect(getStartPoint().getX(), getStartPoint().getY(), getWidth(), getHeight());
-		gc.strokeRect(getStartPoint().getX(), getStartPoint().getY(), getWidth(), getHeight());
 	}
 
 }
