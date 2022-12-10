@@ -11,6 +11,9 @@ import frontend.ui.render.FigureStyle;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.Toggle;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -35,6 +38,13 @@ public class PaintPane extends BorderPane {
 	private final FigureStyledToggleButton squareButton = new FigureStyledToggleButton("Cuadrado", (p1, p2, style) -> new FigureRender<>(style, new Square(p1, p2)));
 	private final FigureStyledToggleButton ellipseButton = new FigureStyledToggleButton("Elipse", (p1, p2, style) -> new FigureRender<>(style, new Ellipse(p1, p2)));
 	private final StyledButton deleteButton = new StyledButton("Borrar");
+
+	private final StyledToggleButton changeFormatButton = new StyledToggleButton("Cop. Form.");
+	Slider slider = new Slider(0, 50, 1);
+	Label borderLabel = new Label("Borde");
+	Label fillingLabel = new Label("Relleno");
+	ColorPicker borderColorPicker = new ColorPicker();
+	ColorPicker fillingColorPicker = new ColorPicker();
 	private final StyledToggleButtonGroup buttonsBox = new StyledToggleButtonGroup();
 
 	// Dibujar una figura
@@ -51,9 +61,14 @@ public class PaintPane extends BorderPane {
 		this.statusPane = statusPane;
 
 		// Configurando los botones
-		StyledToggleButton[] figuresTools = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton};
+		StyledToggleButton[] figuresTools = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, changeFormatButton};
 		buttonsBox.addAll(figuresTools);
 		buttonsBox.addButton(deleteButton);
+		getChildren().add(slider);
+		getChildren().add(borderLabel);
+		getChildren().add(fillingLabel);
+		getChildren().add(borderColorPicker);
+		getChildren().add(fillingColorPicker);
 
 		// Seteando los callbacks para el canvas
 		canvas.setOnMousePressed(this::onMousePressedCanvas);
