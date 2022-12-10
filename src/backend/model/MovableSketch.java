@@ -10,8 +10,8 @@ public interface MovableSketch extends Movable {
 	 */
     /*
     Un sketch se crea a partir de 2 puntos que se obtienen como eventos del mouse.
-    Vamos a construir todas nuestras clases hijas mirando desde el punto de vista del canvas y estos 2 puntos StartPoint y EndPoint.
-    Entendiendo que para cada tipo de Figura hay una relación entre estos 2 y los puntos que la caracterizan.
+    Vamos a construir todas nuestras clases hijas mirando desde el punto de vista del canvas y estos 2 puntos (StartPoint y EndPoint).
+    Entendiendo que para cada tipo de Figura hay una relación entre (StartPoint,EndPoint), y los puntos que la caracterizan.
      */
 	Point[] getPoints();
 
