@@ -3,9 +3,9 @@ package frontend.ui;
 import backend.model.Figure;
 import backend.model.Point;
 
-public abstract class FigureStyledTool extends StyledTool {
+public abstract class FigureStyledToggleButton extends StyledToggleButton {
 
-	public FigureStyledTool(String description) {
+	public FigureStyledToggleButton(String description) {
 		super(description);
 	}
 

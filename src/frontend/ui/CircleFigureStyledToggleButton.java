@@ -4,9 +4,9 @@ import backend.model.Circle;
 import backend.model.Figure;
 import backend.model.Point;
 
-public class CircleFigureStyledTool extends FigureStyledTool {
+public class CircleFigureStyledToggleButton extends FigureStyledToggleButton {
 
-	public CircleFigureStyledTool(String description) {
+	public CircleFigureStyledToggleButton(String description) {
 		super(description);
 	}
 

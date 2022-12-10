@@ -4,9 +4,9 @@ import backend.model.Figure;
 import backend.model.Point;
 import backend.model.Rectangle;
 
-public class RectangleFigureStyledTool extends FigureStyledTool {
+public class RectangleFigureStyledToggleButton extends FigureStyledToggleButton {
 
-	public RectangleFigureStyledTool(String description) {
+	public RectangleFigureStyledToggleButton(String description) {
 		super(description);
 	}
 
