@@ -16,14 +16,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-public class ToolBox extends VBox {
+public class SideBar extends VBox {
 
 	private final ToggleGroup toggleGroup = new ToggleGroup();
 	private final CanvasState canvasState;
 	private final FigureStyle currentStyle = new FigureStyle(Color.BLACK, Color.YELLOW);
 	private final RedrawCanvas redrawCanvas;
 
-	public ToolBox(CanvasState canvasState, RedrawCanvas redrawCanvas) {
+	public SideBar(CanvasState canvasState, RedrawCanvas redrawCanvas) {
 		super(10);
 		setPadding(new Insets(5));
 		setStyle("-fx-background-color: #999");
