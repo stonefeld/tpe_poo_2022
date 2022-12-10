@@ -13,7 +13,7 @@ public class StyledToggleButtonGroup extends VBox {
 		super(10);
 		setPadding(new Insets(5));
 		setStyle("-fx-background-color: #999");
-		setPrefWidth(100);
+		setPrefWidth(110);
 	}
 
 	public void addToggleButtons(StyledToggleButton[] buttons) {

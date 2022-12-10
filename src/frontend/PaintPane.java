@@ -2,10 +2,8 @@ package frontend;
 
 import backend.CanvasState;
 import backend.model.*;
-import frontend.ui.buttons.FigureStyledToggleButton;
-import frontend.ui.buttons.StyledButton;
-import frontend.ui.buttons.StyledToggleButton;
-import frontend.ui.buttons.StyledToggleButtonGroup;
+import com.sun.javafx.scene.web.skin.HTMLEditorSkin;
+import frontend.ui.buttons.*;
 import frontend.ui.render.FigureRender;
 import frontend.ui.render.FigureStyle;
 import frontend.ui.render.RectangleRender;
@@ -13,13 +11,17 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.Toggle;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+
+import java.util.ResourceBundle;
+
+import static javafx.geometry.Pos.CENTER;
 
 public class PaintPane extends BorderPane {
 
@@ -52,6 +54,37 @@ public class PaintPane extends BorderPane {
 	private final Label fillingLabel = new Label("Relleno");
 	private final ColorPicker borderColorPicker = new ColorPicker(currentStyle.getBorderColor());
 	private final ColorPicker fillingColorPicker = new ColorPicker(currentStyle.getFillColor());
+
+
+	private final VBox topBox = new VBox();
+
+
+	private final StyledButtonGroup ccpBox = new StyledButtonGroup();
+	private final String cutIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("cutIcon");
+	private final Image cutIcon = new Image(HTMLEditorSkin.class.getResource(cutIconPath).toString());
+	private final Button cutButton = new Button("Cortar", new ImageView(cutIcon));
+
+	private final String copyIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("copyIcon");
+	private final Image copyIcon = new Image(HTMLEditorSkin.class.getResource(copyIconPath).toString());
+	private final Button copyButton = new Button("Copiar", new ImageView(copyIcon));
+
+	private final String pasteIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("pasteIcon");
+	private final Image pasteIcon = new Image(HTMLEditorSkin.class.getResource(pasteIconPath).toString());
+	private final Button pasteButton = new Button("Pegar", new ImageView(pasteIcon));
+
+
+	private final StyledButtonGroup undoRedoBox = new StyledButtonGroup();
+	private final String undoIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("undoIcon");
+	private final Image undoIcon = new Image(HTMLEditorSkin.class.getResource(undoIconPath).toString());
+	private final Button undoButton = new Button("Deshacer", new ImageView(undoIcon));
+	private final Label undoLabel = new Label("");
+	private final Label undoNumber = new Label("0");
+
+	private final String redoIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("redoIcon");
+	private final Image redoIcon = new Image(HTMLEditorSkin.class.getResource(redoIconPath).toString());
+	private final Button redoButton = new Button("Rehacer", new ImageView(redoIcon));
+	private final Label redoLabel = new Label("");
+	private final Label redoNumber = new Label("0");
 
 	// Dibujar una figura
 	private Point startPoint;
@@ -86,6 +119,21 @@ public class PaintPane extends BorderPane {
 		borderWidthSlider.setShowTickLabels(true);
 		borderWidthSlider.setBlockIncrement(10);
 
+		Button[] ccpTools = {cutButton, copyButton, pasteButton};
+		ccpBox.addAll(ccpTools);
+
+		Button[] undoRedoTools = {undoButton, redoButton};
+		undoRedoBox.add(undoLabel);
+		undoRedoBox.add(undoNumber);
+		undoRedoBox.addAll(undoRedoTools);
+		undoRedoBox.add(redoNumber);
+		undoRedoBox.add(redoLabel);
+		undoRedoBox.setAlignment(CENTER);
+
+		StyledButtonGroup[] topTools = {ccpBox, undoRedoBox};
+		topBox.getChildren().addAll(topTools);
+
+		setTop(topBox);
 		setLeft(buttonsBox);
 		setRight(canvas);
 	}
@@ -100,8 +148,7 @@ public class PaintPane extends BorderPane {
 		if (isValidPoint(endPoint)) {
 			Toggle selected = buttonsBox.getSelected();
 			if (selected != selectionButton) {
-				canvasState.addFigure(((FigureStyledToggleButton) selected)
-						.render(startPoint, endPoint, currentStyle.copy()));
+				canvasState.addFigure(((FigureStyledToggleButton) selected).render(startPoint, endPoint, currentStyle.copy()));
 			}
 			startPoint = null;
 			redrawCanvas();
