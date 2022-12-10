@@ -1,13 +1,11 @@
-package frontend.ui.Rendering;
+package frontend.ui.render;
 
 import backend.model.Figure;
-import backend.model.MovableSketch;
 import backend.model.Point;
 
 @FunctionalInterface
 public interface SketchCreator<T extends Figure> {
-    FigureRender<T> create(Point startPoint, Point endPoint);
+
+    FigureRender<T> createSketch(Point startPoint, Point endPoint, FigureStyle style);
+
 }
-
-
-

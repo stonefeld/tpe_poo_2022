@@ -1,7 +1,7 @@
 package backend;
 
 import backend.model.Figure;
-import frontend.ui.Rendering.FigureRender;
+import frontend.ui.render.FigureRender;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,15 @@ public class CanvasState {
 
 	public void deleteFigure(FigureRender<? extends Figure> figure) {
 		list.remove(figure);
+	}
+
+	public void deleteFigure(Figure figure) {
+		for (FigureRender<? extends Figure> element : list) {
+			if (element.getFigure().equals(figure)) {
+				list.remove(element);
+				return;
+			}
+		}
 	}
 
 	public Iterable<FigureRender<? extends Figure>> figures() {

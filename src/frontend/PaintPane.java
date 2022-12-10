@@ -2,7 +2,12 @@ package frontend;
 
 import backend.CanvasState;
 import backend.model.*;
-import frontend.ui.*;
+import frontend.ui.buttons.FigureStyledToggleButton;
+import frontend.ui.buttons.StyledButton;
+import frontend.ui.buttons.StyledToggleButton;
+import frontend.ui.buttons.StyledToggleButtonGroup;
+import frontend.ui.render.FigureRender;
+import frontend.ui.render.FigureStyle;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -14,40 +19,41 @@ import javafx.scene.paint.Color;
 public class PaintPane extends BorderPane {
 
 	// BackEnd
-	CanvasState canvasState;
+	private final CanvasState canvasState;
 
 	// Canvas y relacionados
-	Canvas canvas = new Canvas(800, 600);
-	GraphicsContext gc = canvas.getGraphicsContext2D();
-	Color lineColor = Color.BLACK, fillColor = Color.YELLOW, selColor = Color.RED;
+	private final Canvas canvas = new Canvas(800, 600);
+	private final GraphicsContext gc = canvas.getGraphicsContext2D();
+
+	// Color de borde, relleno y seleccion
+	private final FigureStyle currentStyle = new FigureStyle(Color.BLACK, Color.YELLOW);
 
 	// Botones Barra Izquierda
-	StyledToggleButton selectionButton = new StyledToggleButton("Seleccionar");
-	FigureStyledToggleButton rectangleButton = new RectangleFigureStyledToggleButton("Rectángulo");
-	FigureStyledToggleButton circleButton = new CircleFigureStyledToggleButton("Círculo");
-	FigureStyledToggleButton squareButton = new SquareFigureStyledToggleButton("Cuadrado");
-	FigureStyledToggleButton ellipseButton = new EllipseFigureStyledToggleButton("Elipse");
-	StyledButton deleteButton = new StyledButton("Borrar");
-	StyledToggleButtonGroup buttonsBox = new StyledToggleButtonGroup();
+	private final StyledToggleButton selectionButton = new StyledToggleButton("Seleccionar");
+	private final FigureStyledToggleButton rectangleButton = new FigureStyledToggleButton("Rectángulo", (p1, p2, style) -> new FigureRender<>(style, new Rectangle(p1, p2)));
+	private final FigureStyledToggleButton circleButton = new FigureStyledToggleButton("Círculo", (p1, p2, style) -> new FigureRender<>(style, new Circle(p1, p2)));
+	private final FigureStyledToggleButton squareButton = new FigureStyledToggleButton("Cuadrado", (p1, p2, style) -> new FigureRender<>(style, new Square(p1, p2)));
+	private final FigureStyledToggleButton ellipseButton = new FigureStyledToggleButton("Elipse", (p1, p2, style) -> new FigureRender<>(style, new Ellipse(p1, p2)));
+	private final StyledButton deleteButton = new StyledButton("Borrar");
+	private final StyledToggleButtonGroup buttonsBox = new StyledToggleButtonGroup();
 
 	// Dibujar una figura
-	Point startPoint;
+	private Point startPoint;
 
 	// Seleccionar una figura
-	Figure selectedFigure;
+	private Figure selectedFigure;
 
 	// StatusBar
-	StatusPane statusPane;
+	private final StatusPane statusPane;
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 
+		// Configurando los botones
 		StyledToggleButton[] figuresTools = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton};
 		buttonsBox.addAll(figuresTools);
 		buttonsBox.addButton(deleteButton);
-
-		gc.setLineWidth(1);
 
 		// Seteando los callbacks para el canvas
 		canvas.setOnMousePressed(this::onMousePressedCanvas);
@@ -63,6 +69,7 @@ public class PaintPane extends BorderPane {
 		setRight(canvas);
 	}
 
+	// CALLBACKS
 	private void onMousePressedCanvas(MouseEvent event) {
 		startPoint = new Point(event.getX(), event.getY());
 	}
@@ -72,7 +79,8 @@ public class PaintPane extends BorderPane {
 		if (isValidPoint(endPoint)) {
 			Toggle selected = buttonsBox.getSelected();
 			if (selected != selectionButton) {
-				canvasState.addFigure(((FigureStyledToggleButton) selected).createFigure(startPoint, endPoint));
+				canvasState.addFigure(((FigureStyledToggleButton) selected)
+						.createFigure(startPoint, endPoint, currentStyle.copy()));
 			}
 			startPoint = null;
 			redrawCanvas();
@@ -116,23 +124,24 @@ public class PaintPane extends BorderPane {
 
 	private void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		for (Figure figure : canvasState.figures()) {
-			gc.setStroke(figure == selectedFigure ? selColor : lineColor);
-			gc.setFill(fillColor);
-			figure.drawSketch(gc);
+		for (FigureRender<? extends Figure> figure : canvasState.figures()) {
+			figure.drawSketch(gc, figure.getFigure() == selectedFigure);
 		}
 	}
 
+	// Valida si el segundo punto es correcto segun las restricciones
 	private boolean isValidPoint(Point endPoint) {
 		return startPoint != null &&
 				!(endPoint.getX() < startPoint.getX()) && !(endPoint.getY() < startPoint.getY());
 	}
 
+	// Devuelve la ultima figura encontrada bajo las coordenadas del mouse y agrega al label la información
+	// de cada figura encontrada
 	private Figure getFigureOnMouse(Point point, StringBuilder label) {
 		Figure ret = null;
-		for (Figure figure : canvasState.figures()) {
-			if (figure.belongsToSketch(point)) {
-				ret = figure;
+		for (FigureRender<? extends Figure> figure : canvasState.figures()) {
+			if (figure.getFigure().belongsToSketch(point)) {
+				ret = figure.getFigure();
 				label.append(figure);
 			}
 		}

@@ -1,9 +1,5 @@
 package frontend.ui.buttons;
 
-import backend.model.Figure;
-import backend.model.MovableSketch;
-import backend.model.Point;
-import backend.model.Square;
 import javafx.scene.Cursor;
 import javafx.scene.control.ToggleButton;
 

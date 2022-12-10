@@ -1,13 +1,12 @@
 package backend.model;
 
-
 /*
-    Las figuras son sketch, pues se dibujan en el canvas
+Las figuras son sketch, pues se dibujan en el canvas
 */
 /*
-    Un sketch se crea a partir de 2 puntos que se obtienen como eventos del mouse.
-    Vamos a construir todas nuestras clases hijas mirando desde el punto de vista del canvas y estos 2 puntos StartPoint y EndPoint.
-    Entendiendo que para cada tipo de Figura hay una relación entre estos 2 y los puntos que la caracterizan.
+Un sketch se crea a partir de 2 puntos que se obtienen como eventos del mouse.
+Vamos a construir todas nuestras clases hijas mirando desde el punto de vista del canvas y estos 2 puntos StartPoint y EndPoint.
+Entendiendo que para cada tipo de Figura hay una relación entre estos 2 y los puntos que la caracterizan.
 */
 public abstract class Figure implements MovableSketch {
 
@@ -19,8 +18,8 @@ public abstract class Figure implements MovableSketch {
 	}
 
 	/*
-	  Width y Height son los argumentos que toma Graphic Context, facilitamos los getters. Al mismo tiempo representan en cada figura una característica particular.
-	  */
+	Width y Height son los argumentos que toma Graphic Context, facilitamos los getters. Al mismo tiempo representan en cada figura una característica particular.
+	*/
 	public double getWidth() {
 		return endPoint.distanceX(startPoint);
 	}

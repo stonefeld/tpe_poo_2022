@@ -1,7 +1,5 @@
 package frontend.ui.buttons;
 
-import frontend.ui.buttons.StyledButton;
-import frontend.ui.buttons.StyledToggleButton;
 import javafx.geometry.Insets;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
