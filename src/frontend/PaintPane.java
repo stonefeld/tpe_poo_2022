@@ -11,6 +11,10 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
+import java.util.ResourceBundle;
+
+import static javafx.geometry.Pos.CENTER;
+
 public class PaintPane extends BorderPane {
 
 	// BackEnd
@@ -42,6 +46,29 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseDragged(this::onMouseDraggedCanvas);
 
 		setLeft(toolBox);
+		// Setenado el callback para el boton de borrado
+		deleteButton.setOnAction(this::onActionDeleteButton);
+
+		borderWidthSlider.setShowTickMarks(true);
+		borderWidthSlider.setShowTickLabels(true);
+		borderWidthSlider.setBlockIncrement(10);
+
+		Button[] ccpTools = {cutButton, copyButton, pasteButton};
+		ccpBox.addAll(ccpTools);
+
+		Button[] undoRedoTools = {undoButton, redoButton};
+		undoRedoBox.add(undoLabel);
+		undoRedoBox.add(undoNumber);
+		undoRedoBox.addAll(undoRedoTools);
+		undoRedoBox.add(redoNumber);
+		undoRedoBox.add(redoLabel);
+		undoRedoBox.setAlignment(CENTER);
+
+		StyledButtonGroup[] topTools = {ccpBox, undoRedoBox};
+		topBox.getChildren().addAll(topTools);
+
+		setTop(topBox);
+		setLeft(buttonsBox);
 		setRight(canvas);
 	}
 
