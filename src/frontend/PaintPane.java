@@ -8,7 +8,9 @@ import frontend.ui.buttons.StyledToggleButton;
 import frontend.ui.buttons.StyledToggleButtonGroup;
 import frontend.ui.render.FigureRender;
 import frontend.ui.render.FigureStyle;
+import frontend.ui.render.RectangleRender;
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
@@ -33,19 +35,23 @@ public class PaintPane extends BorderPane {
 
 	// Botones Barra Izquierda
 	private final StyledToggleButton selectionButton = new StyledToggleButton("Seleccionar");
-	private final FigureStyledToggleButton rectangleButton = new FigureStyledToggleButton("Rectángulo", (p1, p2, style) -> new FigureRender<>(style, new Rectangle(p1, p2)));
-	private final FigureStyledToggleButton circleButton = new FigureStyledToggleButton("Círculo", (p1, p2, style) -> new FigureRender<>(style, new Circle(p1, p2)));
-	private final FigureStyledToggleButton squareButton = new FigureStyledToggleButton("Cuadrado", (p1, p2, style) -> new FigureRender<>(style, new Square(p1, p2)));
-	private final FigureStyledToggleButton ellipseButton = new FigureStyledToggleButton("Elipse", (p1, p2, style) -> new FigureRender<>(style, new Ellipse(p1, p2)));
+	private final FigureStyledToggleButton<Rectangle> rectangleButton = new FigureStyledToggleButton<>("Rectángulo",
+			(p1, p2, style) -> new RectangleRender<>(style, new Rectangle(p1, p2)));
+	private final FigureStyledToggleButton<Circle> circleButton = new FigureStyledToggleButton<>("Círculo",
+			(p1, p2, style) -> new FigureRender<>(style, new Circle(p1, p2)));
+	private final FigureStyledToggleButton<Square> squareButton = new FigureStyledToggleButton<>("Cuadrado",
+			(p1, p2, style) -> new FigureRender<>(style, new Square(p1, p2)));
+	private final FigureStyledToggleButton<Ellipse> ellipseButton = new FigureStyledToggleButton<>("Elipse",
+			(p1, p2, style) -> new FigureRender<>(style, new Ellipse(p1, p2)));
 	private final StyledButton deleteButton = new StyledButton("Borrar");
-
-	private final StyledToggleButton changeFormatButton = new StyledToggleButton("Cop. Form.");
-	Slider slider = new Slider(0, 50, 1);
-	Label borderLabel = new Label("Borde");
-	Label fillingLabel = new Label("Relleno");
-	ColorPicker borderColorPicker = new ColorPicker();
-	ColorPicker fillingColorPicker = new ColorPicker();
 	private final StyledToggleButtonGroup buttonsBox = new StyledToggleButtonGroup();
+
+	private final StyledToggleButton copyFormatButton = new StyledToggleButton("Cop. Form.");
+	private final Slider borderWidthSlider = new Slider(1, 50, currentStyle.getBorderWidth());
+	private final Label borderLabel = new Label("Borde");
+	private final Label fillingLabel = new Label("Relleno");
+	private final ColorPicker borderColorPicker = new ColorPicker(currentStyle.getBorderColor());
+	private final ColorPicker fillingColorPicker = new ColorPicker(currentStyle.getFillColor());
 
 	// Dibujar una figura
 	private Point startPoint;
@@ -61,14 +67,10 @@ public class PaintPane extends BorderPane {
 		this.statusPane = statusPane;
 
 		// Configurando los botones
-		StyledToggleButton[] figuresTools = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, changeFormatButton};
-		buttonsBox.addAll(figuresTools);
-		buttonsBox.addButton(deleteButton);
-		getChildren().add(slider);
-		getChildren().add(borderLabel);
-		getChildren().add(fillingLabel);
-		getChildren().add(borderColorPicker);
-		getChildren().add(fillingColorPicker);
+		StyledToggleButton[] figuresTools = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton};
+		Node[] utilityTools = {deleteButton, copyFormatButton, borderLabel, borderWidthSlider, borderColorPicker, fillingLabel, fillingColorPicker};
+		buttonsBox.addToggleButtons(figuresTools);
+		buttonsBox.addAll(utilityTools);
 
 		// Seteando los callbacks para el canvas
 		canvas.setOnMousePressed(this::onMousePressedCanvas);
@@ -79,6 +81,10 @@ public class PaintPane extends BorderPane {
 
 		// Setenado el callback para el boton de borrado
 		deleteButton.setOnAction(this::onActionDeleteButton);
+
+		borderWidthSlider.setShowTickMarks(true);
+		borderWidthSlider.setShowTickLabels(true);
+		borderWidthSlider.setBlockIncrement(10);
 
 		setLeft(buttonsBox);
 		setRight(canvas);
@@ -95,7 +101,7 @@ public class PaintPane extends BorderPane {
 			Toggle selected = buttonsBox.getSelected();
 			if (selected != selectionButton) {
 				canvasState.addFigure(((FigureStyledToggleButton) selected)
-						.createFigure(startPoint, endPoint, currentStyle.copy()));
+						.render(startPoint, endPoint, currentStyle.copy()));
 			}
 			startPoint = null;
 			redrawCanvas();

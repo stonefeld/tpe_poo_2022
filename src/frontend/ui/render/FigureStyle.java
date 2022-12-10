@@ -4,21 +4,21 @@ import javafx.scene.paint.Color;
 
 public class FigureStyle {
 
-	private Color lineColor, fillColor;
+	private Color borderColor, fillColor;
 	private final Color selColor = Color.RED;
-	private int lineWidth = 1;
+	private int borderWidth = 1;
 
-	public FigureStyle(Color lineColor, Color fillColor) {
-		this.lineColor = lineColor;
+	public FigureStyle(Color borderColor, Color fillColor) {
+		this.borderColor = borderColor;
 		this.fillColor = fillColor;
 	}
 
-	public void setLineColor(Color color) {
-		lineColor = color;
+	public void setBorderColor(Color color) {
+		borderColor = color;
 	}
 
-	public Color getLineColor() {
-		return lineColor;
+	public Color getBorderColor() {
+		return borderColor;
 	}
 
 	public void setFillColor(Color fillColor) {
@@ -33,16 +33,16 @@ public class FigureStyle {
 		return selColor;
 	}
 
-	public void setLineWidth(int lineWidth) {
-		this.lineWidth = lineWidth;
+	public void setBorderWidth(int borderWidth) {
+		this.borderWidth = borderWidth;
 	}
 
-	public int getLineWidth() {
-		return lineWidth;
+	public int getBorderWidth() {
+		return borderWidth;
 	}
 
 	public FigureStyle copy() {
-		return new FigureStyle(lineColor, fillColor);
+		return new FigureStyle(borderColor, fillColor);
 	}
 
 }

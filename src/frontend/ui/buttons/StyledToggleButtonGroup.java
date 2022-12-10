@@ -1,8 +1,8 @@
 package frontend.ui.buttons;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 public class StyledToggleButtonGroup extends VBox {
@@ -16,19 +16,15 @@ public class StyledToggleButtonGroup extends VBox {
 		setPrefWidth(100);
 	}
 
-	public void addButton(StyledToggleButton button) {
-		button.setToggleGroup(buttonGroup);
-		getChildren().add(button);
-	}
-
-	public void addAll(StyledToggleButton[] buttons) {
+	public void addToggleButtons(StyledToggleButton[] buttons) {
 		for (StyledToggleButton button : buttons) {
-			addButton(button);
+			button.setToggleGroup(buttonGroup);
+			getChildren().add(button);
 		}
 	}
 
-	public void addButton(StyledButton button) {
-		getChildren().add(button);
+	public void addAll(Node[] nodes) {
+		getChildren().addAll(nodes);
 	}
 
 	public Toggle getSelected() {

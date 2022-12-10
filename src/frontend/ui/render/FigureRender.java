@@ -27,8 +27,8 @@ public class FigureRender<T extends Figure> {
 	}
 
 	public void drawSketch(GraphicsContext gc, boolean selected) {
-		gc.setLineWidth(style.getLineWidth());
-		gc.setStroke(selected ? style.getSelColor() : style.getLineColor());
+		gc.setLineWidth(style.getBorderWidth());
+		gc.setStroke(selected ? style.getSelColor() : style.getBorderColor());
 		gc.setFill(style.getFillColor());
 		figure.drawSketch(gc);
 	}
