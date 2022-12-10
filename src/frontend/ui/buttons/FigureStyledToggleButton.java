@@ -1,4 +1,4 @@
-package frontend.ui;
+package frontend.ui.buttons;
 
 import backend.model.Figure;
 import backend.model.Point;

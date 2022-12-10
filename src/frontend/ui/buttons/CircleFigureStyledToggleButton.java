@@ -1,4 +1,4 @@
-package frontend.ui;
+package frontend.ui.buttons;
 
 import backend.model.Circle;
 import backend.model.Figure;

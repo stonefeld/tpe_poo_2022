@@ -1,4 +1,4 @@
-package frontend.ui;
+package frontend.ui.buttons;
 
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
