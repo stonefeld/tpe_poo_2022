@@ -1,5 +1,7 @@
 package backend.model;
 
+import javafx.scene.canvas.GraphicsContext;
+
 public interface MovableSketch extends Movable {
 
 	/*
@@ -20,5 +22,7 @@ public interface MovableSketch extends Movable {
 	}
 
 	boolean belongsToSketch(Point point);
+
+	void drawSketch(GraphicsContext gc);
 
 }
