@@ -129,7 +129,7 @@ public class PaintPane extends BorderPane {
 			return;
 		}
 		Toggle selected = buttonsBox.getSelected();
-		if (selected != selectionButton && selected != deleteButton) {
+		if (selected != selectionButton && selected != deleteButton) { // esto hay que corregirlo, clases hijas para los groups o crear 2 grupos
 			canvasState.addFigure(((FigureStyledTool)selected).createFigure(startPoint, endPoint));
 		}
 		startPoint = null;
