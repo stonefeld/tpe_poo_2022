@@ -3,6 +3,7 @@ package frontend.ui.render;
 import backend.model.Oval;
 import javafx.scene.canvas.GraphicsContext;
 
+@SuppressWarnings("unchecked")
 public class OvalRender<T extends Oval> extends FigureRender<T> {
 
 	public OvalRender(FigureStyle style, T figure) {

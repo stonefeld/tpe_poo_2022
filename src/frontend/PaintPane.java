@@ -7,6 +7,7 @@ import frontend.ui.buttons.toolbar.TopBar;
 import frontend.ui.render.FigureRender;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
@@ -34,7 +35,7 @@ public class PaintPane extends BorderPane {
 		// Configurando los botones
 		SideBar sideBar = new SideBar(canvasState, statusPane, this::redrawCanvas);
 		figuresToggleGroup = sideBar.getToggleGroup();
-		TopBar topBar = new TopBar(canvasState, this::redrawCanvas);
+		TopBar topBar = new TopBar(canvasState, this::onActionCutButton, this::onActionCopyButton, this::onActionPasteButton, this::redrawCanvas);
 
 		// Seteando los callbacks para el canvas
 		canvas.setOnMousePressed(this::onMousePressedCanvas);
@@ -42,6 +43,18 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseMoved(this::onMouseMovedCanvas);
 		canvas.setOnMouseClicked(this::onMouseClickedCanvas);
 		canvas.setOnMouseDragged(this::onMouseDraggedCanvas);
+
+		setOnKeyPressed(event -> {
+			if (event.isControlDown()) {
+				if (event.getCode() == KeyCode.X) {
+					onActionCutButton();
+				} else if (event.getCode() == KeyCode.C) {
+					onActionCopyButton();
+				} else if (event.getCode() == KeyCode.V) {
+					onActionPasteButton();
+				}
+			}
+		});
 
 		setTop(topBar);
 		setLeft(sideBar);
@@ -79,6 +92,31 @@ public class PaintPane extends BorderPane {
 		Point point = new Point(event.getX(), event.getY());
 		figuresToggleGroup.getSelected().mouseDraggedAction(point);
 		redrawCanvas();
+	}
+
+	private void onActionCutButton() {
+		if (canvasState.existsSelected()) {
+			canvasState.addOperation(String.format("Cortar %s", canvasState.getSelected().getFigure().name()));
+			canvasState.copySelected();
+			canvasState.deleteSelected();
+			redrawCanvas();
+		}
+	}
+
+	private void onActionCopyButton() {
+		if (canvasState.existsSelected()) {
+			canvasState.addOperation(String.format("Copiar %s", canvasState.getSelected().getFigure().name()));
+			canvasState.copySelected();
+		}
+	}
+
+	private void onActionPasteButton() {
+		if (canvasState.existsCopied()) {
+			FigureRender<? extends Figure> aux = canvasState.paste();
+			canvasState.addOperation(String.format("Pegar %s", aux.getFigure().name()));
+			canvasState.addFigure(aux);
+			redrawCanvas();
+		}
 	}
 
 	private void redrawCanvas() {

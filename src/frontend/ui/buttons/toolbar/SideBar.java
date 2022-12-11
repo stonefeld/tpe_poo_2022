@@ -118,9 +118,11 @@ public class SideBar extends VBox {
 	}
 
 	private void onActionDeleteButton(ActionEvent event) {
-		canvasState.addOperation(String.format("Borrar %s", canvasState.getSelected().getFigure().name()));
-		canvasState.deleteSelected();
-		redrawCanvas.redraw();
+		if (canvasState.existsSelected()) {
+			canvasState.addOperation(String.format("Borrar %s", canvasState.getSelected().getFigure().name()));
+			canvasState.deleteSelected();
+			redrawCanvas.redraw();
+		}
 	}
 
 	private void onActionCopyFormatButton(ActionEvent event) {

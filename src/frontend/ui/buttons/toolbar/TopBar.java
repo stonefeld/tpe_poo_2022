@@ -3,6 +3,7 @@ package frontend.ui.buttons.toolbar;
 import com.sun.javafx.scene.web.skin.HTMLEditorSkin;
 import frontend.CanvasState;
 import frontend.ui.RedrawCanvas;
+import frontend.ui.render.CopyPasteActions;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,7 +21,7 @@ public class TopBar extends VBox {
 	private final CanvasState canvasState;
 	private final RedrawCanvas redrawCanvas;
 
-	public TopBar(CanvasState canvasState, RedrawCanvas redrawCanvas) {
+	public TopBar(CanvasState canvasState, CopyPasteActions cutAction, CopyPasteActions copyAction, CopyPasteActions pasteAction, RedrawCanvas redrawCanvas) {
 		super(10);
 		setPadding(new Insets(5));
 		setStyle("-fx-background-color: #999");
@@ -29,26 +30,18 @@ public class TopBar extends VBox {
 		this.canvasState = canvasState;
 		this.redrawCanvas = redrawCanvas;
 
-		setCopyPasteButtons();
+		setCopyPasteButtons(cutAction, copyAction, pasteAction);
 		setUndoRedoButtons();
 	}
 
-	private void setCopyPasteButtons() {
-		String cutIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("cutIcon");
-		Image cutIcon = new Image(HTMLEditorSkin.class.getResource(cutIconPath).toString());
-		Button cutButton = new Button("Cortar", new ImageView(cutIcon));
+	private void setCopyPasteButtons(CopyPasteActions cutAction, CopyPasteActions copyAction, CopyPasteActions pasteAction) {
+		Button cutButton = new Button("Cortar", getIcon("cutIcon"));
+		Button copyButton = new Button("Copiar", getIcon("copyIcon"));
+		Button pasteButton = new Button("Pegar", getIcon("pasteIcon"));
 
-		String copyIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("copyIcon");
-		Image copyIcon = new Image(HTMLEditorSkin.class.getResource(copyIconPath).toString());
-		Button copyButton = new Button("Copiar", new ImageView(copyIcon));
-
-		String pasteIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("pasteIcon");
-		Image pasteIcon = new Image(HTMLEditorSkin.class.getResource(pasteIconPath).toString());
-		Button pasteButton = new Button("Pegar", new ImageView(pasteIcon));
-
-		cutButton.setOnAction(event -> onActionCutButton());
-		copyButton.setOnAction(event -> onActionCopyButton());
-		pasteButton.setOnAction(event -> onActionPasteButton());
+		cutButton.setOnAction(event -> cutAction.action());
+		copyButton.setOnAction(event -> copyAction.action());
+		pasteButton.setOnAction(event -> pasteAction.action());
 
 		HBox copyPasteBox = new HBox(10);
 		setHBoxStyle(copyPasteBox);
@@ -59,13 +52,8 @@ public class TopBar extends VBox {
 	}
 
 	private void setUndoRedoButtons() {
-		String undoIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("undoIcon");
-		Image undoIcon = new Image(HTMLEditorSkin.class.getResource(undoIconPath).toString());
-		Button undoButton = new Button("Deshacer", new ImageView(undoIcon));
-
-		String redoIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("redoIcon");
-		Image redoIcon = new Image(HTMLEditorSkin.class.getResource(redoIconPath).toString());
-		Button redoButton = new Button("Rehacer", new ImageView(redoIcon));
+		Button undoButton = new Button("Deshacer", getIcon("undoIcon"));
+		Button redoButton = new Button("Rehacer", getIcon("redoIcon"));
 
 		undoButton.setOnAction(this::onActionUndoButton);
 		redoButton.setOnAction(this::onActionRedoButton);
@@ -84,33 +72,6 @@ public class TopBar extends VBox {
 		getChildren().add(undoRedoBox);
 	}
 
-	private void onActionCutButton() {
-		if (canvasState.existsSelected()) {
-			canvasState.addOperation("Cortar Figura");
-			canvasState.copySelected();
-			canvasState.deleteSelected();
-			redrawCanvas.redraw();
-		}
-	}
-
-	private void onActionCopyButton() {
-		if (canvasState.existsSelected()) {
-			canvasState.addOperation("Copiar Figura");
-			canvasState.copySelected();
-		}
-	}
-
-	private void onActionPasteButton() {
-		if (canvasState.existsCopied()) {
-//			FigureRender<? extends Figure> aux = canvasState.paste();
-//			aux.getFigure().move();
-//			canvasState.addFigure(aux);
-			canvasState.addOperation("Pegar Figura");
-			canvasState.addFigure(canvasState.paste());
-			redrawCanvas.redraw();
-		}
-	}
-
 	private void onActionUndoButton(ActionEvent actionEvent) {
 		canvasState.undo();
 		redrawCanvas.redraw();
@@ -126,6 +87,12 @@ public class TopBar extends VBox {
 		box.setPadding(new Insets(5));
 		box.setStyle("-fx-background-color: #999");
 		box.setPrefWidth(100);
+	}
+
+	private ImageView getIcon(String iconName) {
+		String iconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString(iconName);
+		Image icon = new Image(HTMLEditorSkin.class.getResource(iconPath).toString());
+		return new ImageView(icon);
 	}
 
 }
