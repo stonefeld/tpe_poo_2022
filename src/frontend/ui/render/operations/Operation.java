@@ -8,15 +8,21 @@ import java.util.List;
 public class Operation {
 
 	private final List<FigureRender<? extends Figure>> state;
+	private final FigureRender<? extends Figure> copiedFigure;
 	private final String operationLabel;
 
-	public Operation(List<FigureRender<? extends Figure>> state, String operationLabel) {
+	public Operation(List<FigureRender<? extends Figure>> state, String operationLabel, FigureRender<? extends Figure> copiedFigure) {
 		this.state = state;
 		this.operationLabel = operationLabel;
+		this.copiedFigure = copiedFigure;
 	}
 
 	public List<FigureRender<? extends Figure>> getState() {
 		return state;
+	}
+
+	public FigureRender<? extends Figure> getCopiedFigure() {
+		return copiedFigure;
 	}
 
 	@Override

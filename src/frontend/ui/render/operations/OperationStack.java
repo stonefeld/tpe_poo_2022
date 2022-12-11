@@ -42,16 +42,16 @@ public class OperationStack {
 		setUndoRedoLabelText();
 	}
 
-	public Operation undo(List<FigureRender<? extends Figure>> list) {
+	public Operation undo(List<FigureRender<? extends Figure>> list, FigureRender<? extends Figure> copiedFigure) {
 		Operation ret = undoStack.pop();
-		redoStack.push(new Operation(list, ret.toString()));
+		redoStack.push(new Operation(list, ret.toString(), copiedFigure));
 		setUndoRedoLabelText();
 		return ret;
 	}
 
-	public Operation redo(List<FigureRender<? extends Figure>> list) {
+	public Operation redo(List<FigureRender<? extends Figure>> list, FigureRender<? extends Figure> copiedFigure) {
 		Operation ret = redoStack.pop();
-		undoStack.push(new Operation(list, ret.toString()));
+		undoStack.push(new Operation(list, ret.toString(), copiedFigure));
 		setUndoRedoLabelText();
 		return ret;
 	}

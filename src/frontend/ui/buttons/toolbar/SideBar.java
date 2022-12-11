@@ -95,7 +95,7 @@ public class SideBar extends VBox {
 		borderColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
 			currentStyle.setBorderColor(borderColorPicker.getValue());
 			if (canvasState.existsSelected()) {
-				stack.addOperation(new Operation(canvasState.getRenderList(), "Cambiar el color de borde de la figura seleccionada"));
+				stack.addOperation(new Operation(canvasState.getRenderList(), "Cambiar el color de borde de la figura seleccionada", canvasState.getCopied()));
 				canvasState.getSelected().getStyle().setBorderColor(currentStyle.getBorderColor());
 				redrawCanvas.redraw();
 			}
@@ -103,7 +103,7 @@ public class SideBar extends VBox {
 		fillColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
 			currentStyle.setFillColor(fillColorPicker.getValue());
 			if (canvasState.existsSelected()) {
-				stack.addOperation(new Operation(canvasState.getRenderList(), "Cambiar el color de relleno de la figura seleccionada"));
+				stack.addOperation(new Operation(canvasState.getRenderList(), "Cambiar el color de relleno de la figura seleccionada", canvasState.getCopied()));
 				canvasState.getSelected().getStyle().setFillColor(currentStyle.getFillColor());
 				redrawCanvas.redraw();
 			}
@@ -114,7 +114,7 @@ public class SideBar extends VBox {
 	}
 
 	private void onActionDeleteButton(ActionEvent event) {
-		stack.addOperation(new Operation(canvasState.getRenderList(), "Borrar Figura"));
+		stack.addOperation(new Operation(canvasState.getRenderList(), "Borrar Figura", canvasState.getCopied()));
 		canvasState.deleteSelected();
 		redrawCanvas.redraw();
 	}

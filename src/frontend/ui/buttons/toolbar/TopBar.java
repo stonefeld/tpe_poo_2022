@@ -3,6 +3,7 @@ package frontend.ui.buttons.toolbar;
 import com.sun.javafx.scene.web.skin.HTMLEditorSkin;
 import frontend.CanvasState;
 import frontend.ui.RedrawCanvas;
+import frontend.ui.render.operations.Operation;
 import frontend.ui.render.operations.OperationStack;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -84,6 +85,7 @@ public class TopBar extends VBox {
 
 	private void onActionCutButton() {
 		if (canvasState.existsSelected()) {
+			stack.addOperation(new Operation(canvasState.getRenderList(), "Cortar Figura", canvasState.getCopied()));
 			canvasState.copySelected();
 			canvasState.deleteSelected();
 			redrawCanvas.redraw();
@@ -92,6 +94,7 @@ public class TopBar extends VBox {
 
 	private void onActionCopyButton() {
 		if (canvasState.existsSelected()) {
+			stack.addOperation(new Operation(canvasState.getRenderList(), "Copiar Figura", canvasState.getCopied()));
 			canvasState.copySelected();
 		}
 	}
@@ -101,6 +104,8 @@ public class TopBar extends VBox {
 //			FigureRender<? extends Figure> aux = canvasState.getCopied();
 //			aux.getFigure().move();
 //			canvasState.addFigure(aux);
+			stack.addOperation(new Operation(canvasState.getRenderList(), "Pegar Figura", canvasState.getCopied()));
+
 			canvasState.addFigure(canvasState.getCopied());
 			redrawCanvas.redraw();
 		}
@@ -108,14 +113,14 @@ public class TopBar extends VBox {
 
 	private void onActionUndoButton(ActionEvent actionEvent) {
 		if (!stack.undoStackEmpty()) {
-			canvasState.setRenderList(stack.undo(canvasState.getRenderList()).getState());
+			canvasState.setRenderList(stack.undo(canvasState.getRenderList(), canvasState.getCopied()).getState());
 			redrawCanvas.redraw();
 		}
 	}
 
 	private void onActionRedoButton(ActionEvent actionEvent) {
 		if (!stack.redoStackEmpty()) {
-			canvasState.setRenderList(stack.redo(canvasState.getRenderList()).getState());
+			canvasState.setRenderList(stack.redo(canvasState.getRenderList(), canvasState.getCopied()).getState());
 			canvasState.deselectFigure();
 			redrawCanvas.redraw();
 		}

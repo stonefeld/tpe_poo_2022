@@ -70,10 +70,12 @@ public class CanvasState {
 	}
 
 	public FigureRender<? extends Figure> getCopied() {
-		FigureRender<? extends Figure> ret = copiedFigure;
-		copiedFigure = copiedFigure.copy();
-		ret.getFigure().move(canvasWidth / 2 - ret.getFigure().getStartPoint().getX(),
-				canvasHeight / 2 - ret.getFigure().getStartPoint().getY());
+		FigureRender<? extends Figure> ret = null;
+		if(existsCopied()) {
+			ret = copiedFigure.copy();
+		//	ret.getFigure().move(canvasWidth / 2 - ret.getFigure().getStartPoint().getX(),
+		//			canvasHeight / 2 - ret.getFigure().getStartPoint().getY());
+		}
 		return ret;
 	}
 

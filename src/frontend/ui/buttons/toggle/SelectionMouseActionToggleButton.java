@@ -35,7 +35,7 @@ public class SelectionMouseActionToggleButton extends MouseActionToggleButton {
 		if (aux != null) {
 			label.append(aux.getFigure());
 			if (getCanvasState().existsStyleToCopy()) {
-				stack.addOperation(new Operation(getCanvasState().getRenderList(), "Copiar el formato de una figura"));
+				stack.addOperation(new Operation(getCanvasState().getRenderList(), "Copiar el formato de una figura", getCanvasState().getCopied()));
 				aux.setStyle(getCanvasState().getStyleToCopy());
 			} else {
 				aux.select();
@@ -47,8 +47,8 @@ public class SelectionMouseActionToggleButton extends MouseActionToggleButton {
 	@Override
 	public void mouseDraggedAction(Point point) {
 		if (getCanvasState().getSelected() != null) {
-			double diffX = (point.getX() - lastPoint.getX()) / 200;
-			double diffY = (point.getY() - lastPoint.getY()) / 200;
+			double diffX = (point.getX() - lastPoint.getX()) / 150;
+			double diffY = (point.getY() - lastPoint.getY()) / 150;
 			getCanvasState().getSelected().getFigure().move(diffX, diffY);
 		}
 	}
