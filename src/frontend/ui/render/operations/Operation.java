@@ -5,6 +5,11 @@ import frontend.ui.render.FigureRender;
 
 import java.util.List;
 
+/**
+ * Cada operación guarda los estados relevantes del canvasState, es decir, el listado de figuras
+ * a renderizar, y la figura copiada. Además de una descripción de la operación utilizada para
+ * los labels.
+ */
 public class Operation {
 
 	private final List<FigureRender<? extends Figure>> state;

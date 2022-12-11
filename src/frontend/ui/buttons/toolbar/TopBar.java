@@ -37,6 +37,11 @@ public class TopBar extends VBox {
 		setUndoRedoButtons();
 	}
 
+	/**
+	 * Callback público para que el PaintPane pueda utilizar esta función para las llamadas por
+	 * combinación de teclas.
+	 * @param event El evento que contiene la combinación de teclas para tomar acción al respecto.
+	 */
 	public void processCode(KeyEvent event) {
 		if (event.isControlDown()) {
 			if (event.getCode() == KeyCode.X) {
@@ -49,6 +54,10 @@ public class TopBar extends VBox {
 		}
 	}
 
+	/**
+	 * Función encargada de configurar la sección de elementos de copy, cut and paste con sus respectivos
+	 * callbacks, íconos y funciones.
+	 */
 	private void setCopyPasteButtons() {
 		Button cutButton = new Button("Cortar", getIcon("cutIcon"));
 		Button copyButton = new Button("Copiar", getIcon("copyIcon"));
@@ -66,6 +75,10 @@ public class TopBar extends VBox {
 		getChildren().add(copyPasteBox);
 	}
 
+	/**
+	 * Función encargada de configurar la sección de elementos de undo y redo con sus respectivos
+	 * callbacks, íconos y funciones.
+	 */
 	private void setUndoRedoButtons() {
 		Button undoButton = new Button("Deshacer", getIcon("undoIcon"));
 		Button redoButton = new Button("Rehacer", getIcon("redoIcon"));
@@ -124,23 +137,39 @@ public class TopBar extends VBox {
 		}
 	}
 
+	/**
+	 * Función encargada de la funcionalidad de deshacer o undo para los botones en el topBar.
+	 */
 	private void onActionUndoButton(ActionEvent actionEvent) {
 		canvasState.undo();
 		redrawCanvas.redraw();
 	}
 
+	/**
+	 * Función encargada de la funcionalidad de rehacer o redo para los botones en el topBar.
+	 */
 	private void onActionRedoButton(ActionEvent actionEvent) {
 		canvasState.redo();
 		canvasState.deselectFigure();
 		redrawCanvas.redraw();
 	}
 
+	/**
+	 * Una función genérica para establecer todos los botones con el mismo estilo.
+	 * @param box Es el elemento a ser configurado con el estilo deseado.
+	 */
 	private void setHBoxStyle(HBox box) {
 		box.setPadding(new Insets(5));
 		box.setStyle("-fx-background-color: #999");
 		box.setPrefWidth(100);
 	}
 
+	/**
+	 * Para reducir el nivel de código repetido se creo esta función para la creación de los
+	 * íconos de los botones.
+	 * @param iconName El nombre del ícono deseado para buscar.
+	 * @return El ícono ya creado para utilizar en los botones.
+	 */
 	private ImageView getIcon(String iconName) {
 		String iconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString(iconName);
 		Image icon = new Image(HTMLEditorSkin.class.getResource(iconPath).toString());

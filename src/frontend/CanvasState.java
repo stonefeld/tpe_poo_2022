@@ -79,25 +79,43 @@ public class CanvasState {
 	}
 
 	/**
-	 *
+	 * Elimina la selección de la figura previamente seleccionada.
 	 */
 	public void deselectFigure() {
 		selectedFigure = null;
 	}
 
+	/**
+	 * Verifica que exista una figura seleccionada.
+	 * @return Verdadero o True en caso de existir una figura seleccionada. Falso o
+	 * False en caso contrario.
+	 */
 	public boolean existsSelected() {
 		return selectedFigure != null;
 	}
 
+	/**
+	 * Para obtener la figura seleccionada y hacer cambios sobre ella.
+	 * @return La figura actualmente seleccionada.
+	 */
 	public FigureRender<? extends Figure> getSelected() {
 		return selectedFigure;
 	}
 
-	// COPY FIGURE
+	/**
+	 * Realiza una copia de la figura actualmente seleccionada.
+	 */
 	public void copySelected() {
-		copiedFigure = selectedFigure.copy();
+		if (existsSelected()) {
+			copiedFigure = selectedFigure.copy();
+		}
 	}
 
+	/**
+	 * Utilizada para pegar la figura copiada. Realiza una copia de la figura y la mueve al centro
+	 * para que al ser pegada aparezca en medio del canvas.
+	 * @return La figura copiada con sus coordenadas modificadas para aparecer en el centro.
+	 */
 	public FigureRender<? extends Figure> paste() {
 		FigureRender<? extends Figure> ret = getCopiedFigure();
 		copiedFigure = null;
@@ -109,30 +127,56 @@ public class CanvasState {
 		return ret;
 	}
 
+	/**
+	 * Verifica que exista una figura copiada.
+	 * @return Verdadero o True en caso de existir una figura copiada. Falso o
+	 * False en caso contrario.
+	 */
 	public boolean existsCopied() {
 		return copiedFigure != null;
 	}
 
-	// COPY STYLE
+	/**
+	 * Guarda el estilo de la figura actualmente seleccionada.
+	 */
 	public void setStyleToCopy() {
-		styleToCopy = selectedFigure.getStyle();
+		if (existsSelected()) {
+			styleToCopy = selectedFigure.getStyle();
+		}
 	}
 
+	/**
+	 * Obtiene el estilo que iba a ser copiado y elimina el estilo para no seguir
+	 * copiandolo a otras figuras al seleccionarlas.
+	 * @return El estilo de la figura seleccionada para copiar su formato.
+	 */
 	public FigureStyle getStyleToCopy() {
 		FigureStyle ret = styleToCopy;
 		styleToCopy = null;
 		return ret;
 	}
 
+	/**
+	 * Verifica que exista un estilo para copiar.
+	 * @return Verdadero o True en caso de existir un estilo para copiar. Falso o
+	 * False en caso contrario.
+	 */
 	public boolean existsStyleToCopy() {
 		return styleToCopy != null;
 	}
 
-	// OPERATION
+	/**
+	 * Agrega una operación al operationStack, utilizado para el undo y el redo.
+	 * @param description Descripción utilizada para la operación que luego será plasmada en el
+	 * Label de sus correspondientes botones.
+	 */
 	public void addOperation(String description) {
 		stack.addOperation(new Operation(getRenderList(), description, getCopiedFigure()));
 	}
 
+	/**
+	 * Realiza la operación completa de deshacer o undo sobre el operationStack.
+	 */
 	public void undo() {
 		if (!stack.undoStackEmpty()) {
 			Operation undoOperation = stack.undo(getRenderList(), getCopiedFigure());
@@ -141,6 +185,9 @@ public class CanvasState {
 		}
 	}
 
+	/**
+	 * Realiza la operación completa de rehacer o redo sobre el operationStack.
+	 */
 	public void redo() {
 		if (!stack.redoStackEmpty()) {
 			Operation redoOperation = stack.redo(getRenderList(), getCopiedFigure());
@@ -149,10 +196,19 @@ public class CanvasState {
 		}
 	}
 
+	/**
+	 * Para obtener el operationStack y realizar algún cambio u obtener sus propiedades
+	 * como los labels.
+	 * @return El stack de operaciones utilizada para el undo y el redo.
+	 */
 	public OperationStack getOperationStack() {
 		return stack;
 	}
 
+	/**
+	 * Realiza una copia de la lista de elementos seleccionados para renderizar.
+	 * @return La lista copiada, elemento por elemento.
+	 */
 	private List<FigureRender<? extends Figure>> getRenderList() {
 		List<FigureRender<? extends Figure>> toReturn = new ArrayList<>();
 		for (FigureRender<? extends Figure> figure : list) {
@@ -161,6 +217,10 @@ public class CanvasState {
 		return toReturn;
 	}
 
+	/**
+	 * Realiza una copia de la figura copiada.
+	 * @return La copia de la figura copiada.
+	 */
 	private FigureRender<? extends Figure> getCopiedFigure() {
 		FigureRender<? extends Figure> copied = copiedFigure;
 		if (copied != null) {

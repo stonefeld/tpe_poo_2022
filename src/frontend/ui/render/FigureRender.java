@@ -18,6 +18,11 @@ public abstract class FigureRender<T extends Figure> {
 		return figure;
 	}
 
+	/**
+	 * De la figura seleccionada, se le pasa un estilo con algún cambio el cual
+	 * modifica el estilo actual de la figura.
+	 * @param style El estilo nuevo de la figura.
+	 */
 	public void setStyle(FigureStyle style) {
 		this.style.setBorderColor(style.getBorderColor());
 		this.style.setFillColor(style.getFillColor());
@@ -28,14 +33,25 @@ public abstract class FigureRender<T extends Figure> {
 		return style;
 	}
 
+	/**
+	 * Para dibujar el borde con un color diferente si esta seleccionado o no.
+	 */
 	public void select() {
 		selected = true;
 	}
 
+	/**
+	 * Para dibujar el borde con un color diferente si esta seleccionado o no.
+	 */
 	public void deselect() {
 		selected = false;
 	}
 
+	/**
+	 * Al ser llamada la función para dibujar una figura, primero se establece
+	 * el estilo según el estilo de la figura a dibujar.
+	 * @param gc El contexto donde se dibujará la figura.
+	 */
 	public void drawSketch(GraphicsContext gc) {
 		gc.setLineWidth(style.getBorderWidth());
 		gc.setStroke(selected ? style.getSelColor() : style.getBorderColor());

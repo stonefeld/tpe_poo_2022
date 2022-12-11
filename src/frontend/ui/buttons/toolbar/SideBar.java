@@ -45,6 +45,10 @@ public class SideBar extends VBox {
 		return toggleGroup;
 	}
 
+	/**
+	 * Función encargada de la configuración y ubicación de los botones de tipo toggle
+	 * que cumplen funciones de selección de figuras y agregado de figuras.
+	 */
 	private void setFigureButtons() {
 		SelectionMouseActionToggleButton selectionButton = new SelectionMouseActionToggleButton("Seleccionar", canvasState);
 		FigureMouseActionToggleButton<Rectangle> rectangleButton = new FigureMouseActionToggleButton<>("Rectángulo",
@@ -64,6 +68,10 @@ public class SideBar extends VBox {
 		}
 	}
 
+	/**
+	 * Función encargada de la configuración y ubicación de las utilidades restantes como
+	 * botones de borrado y copia de formato, sliders y color pickers.
+	 */
 	private void setUtilityTools() {
 		Button deleteButton = new Button("Borrar");
 		Button copyFormatButton = new Button("Cop. Form.");
@@ -117,6 +125,9 @@ public class SideBar extends VBox {
 		getChildren().addAll(utilityTools);
 	}
 
+	/**
+	 * Callback encargado de la funcionalidad del botón de borrado.
+	 */
 	private void onActionDeleteButton(ActionEvent event) {
 		if (canvasState.existsSelected()) {
 			canvasState.addOperation(String.format("Borrar %s", canvasState.getSelected().getFigure().name()));
@@ -125,6 +136,9 @@ public class SideBar extends VBox {
 		}
 	}
 
+	/**
+	 * Callback encargado de la funcionalidad del botón de copia de formato.
+	 */
 	private void onActionCopyFormatButton(ActionEvent event) {
 		if (canvasState.existsSelected()) {
 			canvasState.setStyleToCopy();
@@ -134,6 +148,11 @@ public class SideBar extends VBox {
 		}
 	}
 
+	/**
+	 * Encargada de establecer un estilo similar para todos los botones agregados
+	 * en esta sección.
+	 * @param button El botón a ser modificado su estilo.
+	 */
 	private void setButtonStyle(ButtonBase button) {
 		button.setMinWidth(100);
 		button.setCursor(Cursor.HAND);
