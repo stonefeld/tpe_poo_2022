@@ -131,3 +131,5 @@ private String getUndoStackMessage() {
 	return String.format("%s %d", peekUndo().toString(), undoSize());
 }
 ```
+
+![](misc/uml-pic.png)
