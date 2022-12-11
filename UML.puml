@@ -1,0 +1,220 @@
+@startuml
+       class AppLauncher {
+         + AppLauncher():
+         + main(String[]): void
+         + start(Stage): void
+       }
+       class AppMenuBar {
+         + AppMenuBar():
+       }
+       class CanvasState {
+         + CanvasState(double, double):
+         + existsStyleToCopy(): boolean
+         + getCanvasWidth(): double
+         + deselectFigure(): void
+         + existsSelected(): boolean
+         + addOperation(String): void
+         + figures(): Iterable<FigureRender<Figure>>
+         + existsCopied(): boolean
+         + copySelected(): void
+         + getStyleToCopy(): FigureStyle
+         + undo(): void
+         + redo(): void
+         + paste(): FigureRender<Figure>
+         + deleteFigure(FigureRender<Figure>): void
+         + addFigure(FigureRender<Figure>): void
+         + selectFigure(FigureRender<Figure>): void
+         + setStyleToCopy(): void
+         + getOperationStack(): OperationStack
+         + getCanvasHeight(): double
+         + getSelected(): FigureRender<Figure>
+         + deleteSelected(): void
+       }
+       class Circle extends Oval{
+         + Circle(Point, Point):
+         + name(): String
+         + toString(): String
+         + copy(): Figure
+         + belongsToSketch(Point): boolean
+       }
+       interface CopyPasteActions << interface >> {
+         + action(): void
+       }
+       class Ellipse extends Oval{
+         + Ellipse(Point, Point):
+         + copy(): Figure
+         + name(): String
+         + toString(): String
+         + belongsToSketch(Point): boolean
+       }
+       abstract class Figure implements MovableSketch{
+         + Figure(Point, Point):
+         + getWidth(): double
+         + name(): String
+         + getHeight(): double
+         + getEndPoint(): Point
+         + getStartPoint(): Point
+         + isValid(Point, Point): boolean
+         + copy(): Figure
+         + getPoints(): Point[]
+       }
+       class FigureMouseActionToggleButton<T> extends MouseActionToggleButton {
+         + FigureMouseActionToggleButton(String, FigureStyle, CanvasState, SketchCreator<T>):
+         + mouseReleasedAction(Point): void
+         + mousePressedAction(Point): void
+       }
+       abstract class FigureRender<T extends Figure> {
+         + FigureRender(FigureStyle, T):
+         + copy(): FigureRender<T>
+         + getFigure(): T
+         + setStyle(FigureStyle): void
+         + drawSketch(GraphicsContext): void
+         + getStyle(): FigureStyle
+         + select(): void
+         + deselect(): void
+       }
+       class FigureStyle {
+         + FigureStyle(Color, Color, int):
+         + FigureStyle(Color, Color):
+         + setBorderWidth(int): void
+         + setBorderColor(Color): void
+         + copy(): FigureStyle
+         + setFillColor(Color): void
+         + getBorderWidth(): int
+         + getBorderColor(): Color
+         + getSelColor(): Color
+         + getFillColor(): Color
+       }
+       class MainFrame {
+         + MainFrame(CanvasState):
+       }
+       class MouseActionToggleButton  implements MouseActions {
+         + MouseActionToggleButton(String, CanvasState):
+         + getCanvasState(): CanvasState
+       }
+       class MouseActionToggleGroup {
+         + MouseActionToggleGroup():
+         + getSelected(): MouseActionToggleButton
+       }
+       interface MouseActions << interface >> {
+         + mouseClickedAction(Point, StringBuilder): void
+         + mouseDraggedAction(Point): void
+         + mouseReleasedAction(Point): void
+         + mousePressedAction(Point): void
+       }
+       interface Movable << interface >> {
+         + move(double, double): void
+       }
+       interface MovableSketch << interface >> extends Movable {
+         + belongsToSketch(Point): boolean
+         + getPoints(): Point[]
+         + move(double, double): void
+       }
+       class Operation {
+         + Operation(List<FigureRender<Figure>>, String, FigureRender<Figure>):
+         + toString(): String
+         + getState(): List<FigureRender<Figure>>
+         + getCopiedFigure(): FigureRender<Figure>
+       }
+       class OperationStack {
+         + OperationStack():
+         + undoSize(): int
+         + redoStackEmpty(): boolean
+         + redo(List<FigureRender<Figure>>, FigureRender<Figure>): Operation
+         + undoStackEmpty(): boolean
+         + addOperation(Operation): void
+         + peekRedo(): Operation
+         + cleanRedoStack(): void
+         + undo(List<FigureRender<Figure>>, FigureRender<Figure>): Operation
+         + redoSize(): int
+         + getRedoLabel(): Label
+         + peekUndo(): Operation
+         + getUndoLabel(): Label
+       }
+       abstract class Oval extends Figure{
+         + Oval(Point, Point, Point):
+         + getCenterPoint(): Point
+         + getPoints(): Point[]
+       }
+       class OvalRender<T extends Oval> extends FigureRender{
+         + OvalRender(FigureStyle, T):
+         + drawSketch(GraphicsContext): void
+         + copy(): FigureRender<T>
+       }
+       class PaintPane {
+         + PaintPane(CanvasState, StatusPane):
+       }
+       class Point implements Movable{
+         + Point(double, double):
+         + copy(): Point
+         + distanceX(Point): double
+         + toString(): String
+         + getY(): double
+         + distance(Point): double
+         + move(double, double): void
+         + getX(): double
+         + distanceY(Point): double
+         + moveTo(double, double): void
+       }
+       class Rectangle extends Figure {
+         + Rectangle(Point, Point):
+         + belongsToSketch(Point): boolean
+         + copy(): Figure
+         + name(): String
+         + toString(): String
+       }
+       class RectangleRender<T extends Rectangle> extends FigureRender{
+         + RectangleRender(FigureStyle, T):
+         + copy(): RectangleRender<T>
+         + drawSketch(GraphicsContext): void
+       }
+       interface RedrawCanvas << interface >> {
+         + redraw(): void
+       }
+       class SelectionMouseActionToggleButton  extends MouseActionToggleButton{
+         + SelectionMouseActionToggleButton(String, CanvasState):
+         + mousePressedAction(Point): void
+         + mouseDraggedAction(Point): void
+         + mouseClickedAction(Point, StringBuilder): void
+       }
+       class SideBar {
+         + SideBar(CanvasState, StatusPane, RedrawCanvas):
+         + getToggleGroup(): MouseActionToggleGroup
+       }
+       interface SketchCreator<T> << interface >> {
+         + createSketch(Point, Point, FigureStyle): FigureRender<T>
+       }
+       class Square extends Rectangle{
+         + Square(Point, Point):
+         + toString(): String
+         + name(): String
+         + copy(): Figure
+       }
+       class StatusPane {
+         + StatusPane():
+         + updateStatus(String): void
+       }
+       class TopBar {
+         + TopBar(CanvasState, CopyPasteActions, CopyPasteActions, CopyPasteActions, RedrawCanvas):
+       }
+       Figure *-- Point
+       FigureRender *-- FigureStyle
+       FigureRender *-- Figure
+       CanvasState *-- OperationStack
+       CanvasState *-- FigureRender
+       CanvasState *-- FigureStyle
+       PaintPane *-- MouseActionToggleGroup
+       PaintPane *-- StatusPane
+       PaintPane *-- CanvasState
+       OperationStack *-- Operation
+       FigureMouseActionToggleButton *-- SketchCreator
+       FigureMouseActionToggleButton *-- FigureStyle
+       FigureMouseActionToggleButton *-- Point
+       MouseActionToggleButton *-- CanvasState
+       SelectionMouseActionToggleButton *-- Point
+
+
+
+@enduml
+
+
