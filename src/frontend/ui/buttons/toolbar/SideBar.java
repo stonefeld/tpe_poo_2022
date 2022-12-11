@@ -91,7 +91,7 @@ public class SideBar extends VBox {
 		borderColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
 			currentStyle.setBorderColor(borderColorPicker.getValue());
 			if (canvasState.existsSelected()) {
-				canvasState.addOperation("Cambiar el color de borde de la figura seleccionada");
+				canvasState.addOperation(String.format("Cambiar color de borde a %s", canvasState.getSelected().getFigure().name()));
 				canvasState.getSelected().getStyle().setBorderColor(currentStyle.getBorderColor());
 				redrawCanvas.redraw();
 			}
@@ -99,18 +99,26 @@ public class SideBar extends VBox {
 		fillColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
 			currentStyle.setFillColor(fillColorPicker.getValue());
 			if (canvasState.existsSelected()) {
-				canvasState.addOperation("Cambiar el color de relleno de la figura seleccionada");
+				canvasState.addOperation(String.format("Cambiar color de relleno a %s", canvasState.getSelected().getFigure().name()));
 				canvasState.getSelected().getStyle().setFillColor(currentStyle.getFillColor());
 				redrawCanvas.redraw();
 			}
 		});
 
-		Node[] utilityTools = {deleteButton, copyFormatButton, new Label("Borde"), borderWidthSlider, borderColorPicker, new Label("Relleno"), fillColorPicker};
+		Node[] utilityTools = {
+				deleteButton,
+				copyFormatButton,
+				new Label("Borde"),
+				borderWidthSlider,
+				borderColorPicker,
+				new Label("Relleno"),
+				fillColorPicker
+		};
 		getChildren().addAll(utilityTools);
 	}
 
 	private void onActionDeleteButton(ActionEvent event) {
-		canvasState.addOperation("Borrar Figura");
+		canvasState.addOperation(String.format("Borrar %s", canvasState.getSelected().getFigure().name()));
 		canvasState.deleteSelected();
 		redrawCanvas.redraw();
 	}

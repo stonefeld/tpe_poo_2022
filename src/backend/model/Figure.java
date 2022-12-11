@@ -39,6 +39,8 @@ public abstract class Figure implements MovableSketch {
 
 	public abstract Figure copy();
 
+	public abstract String name();
+
 	@Override
 	public Point[] getPoints() {
 		return new Point[]{startPoint, endPoint};

@@ -14,6 +14,10 @@ public class Circle extends Oval {
 		this.radius = startPoint.distance(endPoint);
 	}
 
+	public String name() {
+		return "Círculo";
+	}
+
 	@Override
 	public String toString() {
 		return String.format("Círculo [Centro: %s, Radio: %.2f]", getCenterPoint(), getWidth());

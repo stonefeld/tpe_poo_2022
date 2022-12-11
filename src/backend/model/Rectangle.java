@@ -6,6 +6,10 @@ public class Rectangle extends Figure {
 		super(startPoint, endPoint);
 	}
 
+	public String name() {
+		return "Rectángulo";
+	}
+
 	@Override
 	public String toString() {
 		return String.format("Rectángulo [ %s , %s ]", getStartPoint(), getEndPoint());
