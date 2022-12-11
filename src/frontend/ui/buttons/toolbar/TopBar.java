@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Labeled;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -75,6 +76,12 @@ public class TopBar extends VBox {
 
 		HBox undoRedoBox = new HBox(10);
 		setHBoxStyle(undoRedoBox);
+
+		setLabelStyle(undoButton, Pos.CENTER, canvasState.getCanvasWidth()/6);
+		setLabelStyle(redoButton, Pos.CENTER, canvasState.getCanvasWidth()/6);
+		setLabelStyle(canvasState.getOperationStack().getUndoLabel(), Pos.CENTER_RIGHT, canvasState.getCanvasWidth()/3);
+		setLabelStyle(canvasState.getOperationStack().getRedoLabel(), Pos.CENTER_LEFT, canvasState.getCanvasWidth()/3);
+
 
 		Node[] undoRedoItems = {
 				canvasState.getOperationStack().getUndoLabel(),
@@ -145,6 +152,15 @@ public class TopBar extends VBox {
 		String iconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString(iconName);
 		Image icon = new Image(HTMLEditorSkin.class.getResource(iconPath).toString());
 		return new ImageView(icon);
+	}
+
+	/**
+	 * Función encargada del estilo del Labeled recibido, se lo alinea con la alineacion recibida
+	 * y se lo ansancha con el ancho recibido
+	 */
+	private void setLabelStyle(Labeled label, Pos pos, double width){
+		label.setAlignment(pos);
+		label.setPrefWidth(width);
 	}
 
 }
