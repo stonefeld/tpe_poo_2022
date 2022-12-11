@@ -74,10 +74,10 @@ En el caso de copiar formato se le asigna un setOnAction el cual permite que cad
 
 ```java
 if (getCanvasState().existsStyleToCopy()) {
-  aux.setStyle(getCanvasState().getStyleToCopy());
+	aux.setStyle(getCanvasState().getStyleToCopy());
 } else {
-  aux.select();
-  getCanvasState().selectFigure(aux);
+	aux.select();
+	getCanvasState().selectFigure(aux);
 }
 ```
 
@@ -87,10 +87,10 @@ Para realizar esta tarea se crean los botones de cortar, copiar y pegar con sus 
 
 ```java
 public FigureRender<? extends Figure> paste() {
-  FigureRender<? extends Figure> ret = copiedFigure.copy();
-  Figure retFigure = ret.getFigure();
-  retFigure.move((canvasWidth / 2) - (retFigure.getStartPoint().getX() + retFigure.getEndPoint().getX()) / 2, (canvasHeight / 2 ) - (retFigure.getStartPoint().getY() + retFigure.getEndPoint().getY()) / 2);
-  return ret;
+	FigureRender<? extends Figure> ret = copiedFigure.copy();
+	Figure retFigure = ret.getFigure();
+	retFigure.move((canvasWidth / 2) - (retFigure.getStartPoint().getX() + retFigure.getEndPoint().getX()) / 2, (canvasHeight / 2 ) - (retFigure.getStartPoint().getY() + retFigure.getEndPoint().getY()) / 2);
+	return ret;
 }
 ```
 
@@ -114,20 +114,20 @@ Para agregar los botones, se los agrego directamente en TopBar, pero en la parte
 
 ```java
 public Operation undo(List<FigureRender<? extends Figure>> list, FigureRender<? extends Figure> copied) {
-		Operation ret = undoStack.pop();
-		redoStack.push(new Operation(list, ret.toString(), copied));
-		setUndoRedoLabelText();
-		return ret;
-	}
+	Operation ret = undoStack.pop();
+	redoStack.push(new Operation(list, ret.toString(), copied));
+	setUndoRedoLabelText();
+	return ret;
+}
 ```
 
 Para poder setear el label de cada uno, se utiliza el toString de cada operación para saber qué tipo de operación es y sobre qué tipo de figura se realiza esta operación, y para el numero simplemente se utiliza el tamaño del Stack.
 
 ```java
 private String getUndoStackMessage() {
-		if (undoStackEmpty()) {
-			return "0";
-		}
-		return String.format("%s %d", peekUndo().toString(), undoSize());
+	if (undoStackEmpty()) {
+		return "0";
 	}
+	return String.format("%s %d", peekUndo().toString(), undoSize());
+}
 ```
