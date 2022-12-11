@@ -3,7 +3,7 @@ package frontend.ui.render;
 import backend.model.Figure;
 import javafx.scene.canvas.GraphicsContext;
 
-public class FigureRender<T extends Figure> {
+public abstract class FigureRender<T extends Figure> {
 
 	private final FigureStyle style;
 	private final T figure;
@@ -41,5 +41,7 @@ public class FigureRender<T extends Figure> {
 		gc.setStroke(selected ? style.getSelColor() : style.getBorderColor());
 		gc.setFill(style.getFillColor());
 	}
+
+	public abstract FigureRender<T> copy();
 
 }

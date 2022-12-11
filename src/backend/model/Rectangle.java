@@ -17,4 +17,9 @@ public class Rectangle extends Figure {
 				point.getY() > getStartPoint().getY() && point.getY() < getEndPoint().getY());
 	}
 
+	@Override
+	public Figure copy() {
+		return new Rectangle(getStartPoint().copy(), getEndPoint().copy());
+	}
+
 }

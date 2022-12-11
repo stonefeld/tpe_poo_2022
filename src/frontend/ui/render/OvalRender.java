@@ -10,6 +10,11 @@ public class OvalRender<T extends Oval> extends FigureRender<T> {
 	}
 
 	@Override
+	public FigureRender<T> copy() {
+		return new OvalRender<>(getStyle(), (T) getFigure().copy());
+	}
+
+	@Override
 	public void drawSketch(GraphicsContext gc) {
 		super.drawSketch(gc);
 		gc.fillOval(getFigure().getStartPoint().getX(), getFigure().getStartPoint().getY(), getFigure().getWidth(), getFigure().getHeight());

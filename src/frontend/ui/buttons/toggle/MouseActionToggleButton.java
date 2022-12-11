@@ -1,6 +1,6 @@
 package frontend.ui.buttons.toggle;
 
-import backend.CanvasState;
+import frontend.CanvasState;
 import frontend.ui.buttons.MouseActions;
 import javafx.scene.control.ToggleButton;
 

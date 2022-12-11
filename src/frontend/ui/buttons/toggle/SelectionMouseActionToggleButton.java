@@ -1,6 +1,6 @@
 package frontend.ui.buttons.toggle;
 
-import backend.CanvasState;
+import frontend.CanvasState;
 import backend.model.Figure;
 import backend.model.Point;
 import frontend.ui.render.FigureRender;
@@ -41,10 +41,10 @@ public class SelectionMouseActionToggleButton extends MouseActionToggleButton {
 
 	@Override
 	public void mouseDraggedAction(Point point) {
-		if (getCanvasState().getSelectedFigure() != null) {
+		if (getCanvasState().getSelected() != null) {
 			double diffX = (point.getX() - lastPoint.getX()) / 200;
 			double diffY = (point.getY() - lastPoint.getY()) / 200;
-			getCanvasState().getSelectedFigure().getFigure().move(diffX, diffY);
+			getCanvasState().getSelected().getFigure().move(diffX, diffY);
 		}
 	}
 

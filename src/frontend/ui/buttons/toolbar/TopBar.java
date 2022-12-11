@@ -1,11 +1,10 @@
-package frontend.ui.buttons;
+package frontend.ui.buttons.toolbar;
 
-import backend.CanvasState;
+import frontend.CanvasState;
 import com.sun.javafx.scene.web.skin.HTMLEditorSkin;
 import frontend.ui.RedrawCanvas;
 import frontend.ui.render.operations.Operation;
 import frontend.ui.render.operations.OperationStack;
-import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,7 +16,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.util.Observable;
 import java.util.ResourceBundle;
 
 public class TopBar extends VBox {
@@ -54,6 +52,10 @@ public class TopBar extends VBox {
 		String pasteIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("pasteIcon");
 		Image pasteIcon = new Image(HTMLEditorSkin.class.getResource(pasteIconPath).toString());
 		Button pasteButton = new Button("Pegar", new ImageView(pasteIcon));
+
+		cutButton.setOnAction(this::onActionCutButton);
+		copyButton.setOnAction(this::onActionCopyButton);
+		pasteButton.setOnAction(this::onActionPasteButton);
 
 		HBox copyPasteBox = new HBox(10);
 		setHBoxStyle(copyPasteBox);
@@ -106,6 +108,30 @@ public class TopBar extends VBox {
 		}
 	}
 
+
+	private void onActionCutButton(ActionEvent event) {
+		if (canvasState.existsSelected()) {
+			canvasState.copySelected();
+			canvasState.deleteSelected();
+			redrawCanvas.redraw();
+		}
+	}
+
+	private void onActionCopyButton(ActionEvent event) {
+		if (canvasState.existsSelected()) {
+			canvasState.copySelected();
+		}
+	}
+
+	private void onActionPasteButton(ActionEvent event) {
+		if (canvasState.existsCopied()) {
+//			FigureRender<? extends Figure> aux = canvasState.getCopied();
+//			aux.getFigure().move();
+//			canvasState.addFigure(aux);
+			canvasState.addFigure(canvasState.getCopied());
+			redrawCanvas.redraw();
+		}
+	}
 
 	private void setHBoxStyle(HBox box) {
 		box.setPadding(new Insets(5));

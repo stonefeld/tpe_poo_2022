@@ -19,4 +19,9 @@ public class Ellipse extends Oval {
 				Math.pow(point.getY() - getCenterPoint().getY(), 2) / Math.pow(getHeight(), 2)) <= 0.3;
 	}
 
+	@Override
+	public Figure copy() {
+		return new Ellipse(getStartPoint().copy(), getEndPoint().copy());
+	}
+
 }

@@ -2,6 +2,8 @@ package backend.model;
 
 public class Circle extends Oval {
 
+	private final double radius;
+
 	public Circle(Point startPoint, Point endPoint) {
 		/*
 		Para esta figura particular el startPoint es el centro del círculo
@@ -9,7 +11,7 @@ public class Circle extends Oval {
 		super(new Point(startPoint.getX() - startPoint.distance(endPoint), startPoint.getY() - startPoint.distance(endPoint)),
 				new Point(startPoint.getX() + startPoint.distance(endPoint), startPoint.getY() + startPoint.distance(endPoint)),
 				startPoint);
-
+		this.radius = startPoint.distance(endPoint);
 	}
 
 	@Override
@@ -23,4 +25,10 @@ public class Circle extends Oval {
 				Math.pow(getCenterPoint().getY() - point.getY(), 2)) < getWidth() / 2;
 	}
 
+	@Override
+	public Figure copy() {
+		Point center = getCenterPoint().copy();
+		Point end = new Point(center.getX(), center.getY() + radius);
+		return new Circle(center, end);
+	}
 }

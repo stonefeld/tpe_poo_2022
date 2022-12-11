@@ -12,23 +12,35 @@ public class Point {
 	public double getX() {
 		return x;
 	}
+
 	public double getY() {
 		return y;
 	}
-	public double distanceX(Point p2){
+
+	public double distanceX(Point p2) {
 		return Math.abs(x - p2.getX());
 	}
-	public double distanceY(Point p2){
+
+	public double distanceY(Point p2) {
 		return Math.abs(y - p2.getY());
 	}
 
-	public double distance(Point point){
-		return Math.sqrt(Math.pow(distanceX(point),2) + Math.pow(distanceY(point),2));
+	public double distance(Point point) {
+		return Math.sqrt(Math.pow(distanceX(point), 2) + Math.pow(distanceY(point), 2));
 	}
 
-	public void move(double diffX, double diffY){
-		this.x += diffX;
-		this.y += diffY;
+	public void move(double diffX, double diffY) {
+		x += diffX;
+		y += diffY;
+	}
+
+	public void moveTo(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	public Point copy() {
+		return new Point(x, y);
 	}
 
 	@Override

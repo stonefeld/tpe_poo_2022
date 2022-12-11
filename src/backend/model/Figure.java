@@ -17,9 +17,6 @@ public abstract class Figure implements MovableSketch {
 		this.startPoint = startPoint;
 	}
 
-	/*
-	Width y Height son los argumentos que toma Graphic Context, facilitamos los getters. Al mismo tiempo representan en cada figura una característica particular.
-	*/
 	public double getWidth() {
 		return endPoint.distanceX(startPoint);
 	}
@@ -28,9 +25,6 @@ public abstract class Figure implements MovableSketch {
 		return endPoint.distanceY(startPoint);
 	}
 
-	/*
-	es static porque no necesito crear una instancia para determinar si 2 puntos son válidos para crear cualquier figura
-	 */
 	public static boolean isValid(Point startPoint, Point endPoint) {
 		return startPoint != null && startPoint.getX() < endPoint.getX() && startPoint.getY() < endPoint.getY();
 	}
@@ -42,6 +36,8 @@ public abstract class Figure implements MovableSketch {
 	public Point getEndPoint() {
 		return endPoint;
 	}
+
+	public abstract Figure copy();
 
 	@Override
 	public Point[] getPoints() {

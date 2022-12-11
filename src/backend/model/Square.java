@@ -11,4 +11,9 @@ public class Square extends Rectangle {
 		return String.format("Cuadrado [ %s , %s ]", getStartPoint(), getEndPoint());
 	}
 
+	@Override
+	public Figure copy() {
+		return new Square(getStartPoint().copy(), getEndPoint().copy());
+	}
+
 }

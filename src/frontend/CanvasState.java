@@ -1,4 +1,4 @@
-package backend;
+package frontend;
 
 import backend.model.Figure;
 import frontend.ui.render.FigureRender;
@@ -14,8 +14,8 @@ public class CanvasState {
 
 	private List<FigureRender<? extends Figure>> list = new ArrayList<>();
 	private FigureRender<? extends Figure> selectedFigure;
+	private FigureRender<? extends Figure> copiedFigure;
 	private FigureStyle styleToCopy;
-
 	private final OperationStack stack = new OperationStack();
 
 	public void addFigure(FigureRender<? extends Figure> figure) {
@@ -26,25 +26,50 @@ public class CanvasState {
 		list.remove(figure);
 	}
 
+	public Iterable<FigureRender<? extends Figure>> figures() {
+		return new ArrayList<>(list);
+	}
+
+	// SELECT FIGURE
 	public void deleteSelected() {
 		deleteFigure(selectedFigure);
 		deselectFigure();
-	}
-
-	public void deselectFigure() {
-		selectedFigure = null;
 	}
 
 	public void selectFigure(FigureRender<? extends Figure> figure) {
 		selectedFigure = figure;
 	}
 
+	public void deselectFigure() {
+		selectedFigure = null;
+	}
+
 	public boolean existsSelected() {
 		return selectedFigure != null;
 	}
 
-	public FigureRender<? extends Figure> getSelectedFigure() {
+	public FigureRender<? extends Figure> getSelected() {
 		return selectedFigure;
+	}
+
+	// COPY FIGURE
+	public void copySelected() {
+		copiedFigure = selectedFigure.copy();
+	}
+
+	public FigureRender<? extends Figure> getCopied() {
+		FigureRender<? extends Figure> ret = copiedFigure;
+		copiedFigure = copiedFigure.copy();
+		return ret;
+	}
+
+	public boolean existsCopied() {
+		return copiedFigure != null;
+	}
+
+	// COPY STYLE
+	public void setStyleToCopy() {
+		styleToCopy = selectedFigure.getStyle();
 	}
 
 	public FigureStyle getStyleToCopy() {
@@ -53,18 +78,11 @@ public class CanvasState {
 		return ret;
 	}
 
-	public void setStyleToCopy() {
-		styleToCopy = selectedFigure.getStyle();
-	}
-
 	public boolean existsStyleToCopy() {
 		return styleToCopy != null;
 	}
 
-	public Iterable<FigureRender<? extends Figure>> figures() {
-		return new ArrayList<>(list);
-	}
-
+	// OPERATION
 	public void setRenderList(List<FigureRender<? extends Figure>> list) {
 		this.list = list;
 	}
@@ -76,4 +94,5 @@ public class CanvasState {
 	public OperationStack getStack() {
 		return stack;
 	}
+
 }

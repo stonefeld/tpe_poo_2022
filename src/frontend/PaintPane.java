@@ -1,14 +1,13 @@
 package frontend;
 
-import backend.CanvasState;
 import backend.model.*;
-import frontend.ui.buttons.*;
-import frontend.ui.buttons.toggle.MouseActionToggleButton;
+import frontend.ui.buttons.toggle.MouseActionToggleGroup;
+import frontend.ui.buttons.toolbar.SideBar;
+import frontend.ui.buttons.toolbar.TopBar;
 import frontend.ui.render.FigureRender;
 import frontend.ui.render.operations.OperationStack;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
@@ -22,7 +21,7 @@ public class PaintPane extends BorderPane {
 	private final GraphicsContext gc = canvas.getGraphicsContext2D();
 
 	// El toggle group para saber que boton esta seleccionado
-	private final ToggleGroup figuresToggleGroup;
+	private final MouseActionToggleGroup figuresToggleGroup;
 
 	private OperationStack stack = new OperationStack();
 	// StatusBar
@@ -52,12 +51,12 @@ public class PaintPane extends BorderPane {
 	// CALLBACKS
 	private void onMousePressedCanvas(MouseEvent event) {
 		Point point = new Point(event.getX(), event.getY());
-		((MouseActionToggleButton) figuresToggleGroup.getSelectedToggle()).mousePressedAction(point);
+		figuresToggleGroup.getSelected().mousePressedAction(point);
 	}
 
 	private void onMouseReleasedCanvas(MouseEvent event) {
 		Point point = new Point(event.getX(), event.getY());
-		((MouseActionToggleButton) figuresToggleGroup.getSelectedToggle()).mouseReleasedAction(point);
+		figuresToggleGroup.getSelected().mouseReleasedAction(point);
 		redrawCanvas();
 	}
 
@@ -71,14 +70,14 @@ public class PaintPane extends BorderPane {
 	private void onMouseClickedCanvas(MouseEvent event) {
 		Point point = new Point(event.getX(), event.getY());
 		StringBuilder label = new StringBuilder("Se seleccionó: ");
-		((MouseActionToggleButton) figuresToggleGroup.getSelectedToggle()).mouseClickedAction(point, label);
-		statusPane.updateStatus(canvasState.getSelectedFigure() != null ? label.toString() : "Ninguna figura encontrada");
+		figuresToggleGroup.getSelected().mouseClickedAction(point, label);
+		statusPane.updateStatus(canvasState.existsSelected() ? label.toString() : "Ninguna figura encontrada");
 		redrawCanvas();
 	}
 
 	private void onMouseDraggedCanvas(MouseEvent event) {
 		Point point = new Point(event.getX(), event.getY());
-		((MouseActionToggleButton) figuresToggleGroup.getSelectedToggle()).mouseDraggedAction(point);
+		figuresToggleGroup.getSelected().mouseDraggedAction(point);
 		redrawCanvas();
 	}
 

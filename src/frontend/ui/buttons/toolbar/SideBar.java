@@ -1,10 +1,11 @@
-package frontend.ui.buttons;
+package frontend.ui.buttons.toolbar;
 
-import backend.CanvasState;
+import frontend.CanvasState;
 import backend.model.*;
 import frontend.StatusPane;
 import frontend.ui.RedrawCanvas;
 import frontend.ui.buttons.toggle.FigureMouseActionToggleButton;
+import frontend.ui.buttons.toggle.MouseActionToggleGroup;
 import frontend.ui.buttons.toggle.SelectionMouseActionToggleButton;
 import frontend.ui.render.FigureStyle;
 import frontend.ui.render.OvalRender;
@@ -13,6 +14,7 @@ import frontend.ui.render.operations.Operation;
 import frontend.ui.render.operations.OperationStack;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -21,7 +23,7 @@ import javafx.scene.paint.Color;
 
 public class SideBar extends VBox {
 
-	private final ToggleGroup toggleGroup = new ToggleGroup();
+	private final MouseActionToggleGroup toggleGroup = new MouseActionToggleGroup();
 	private final CanvasState canvasState;
 	private final StatusPane statusPane;
 	private final FigureStyle currentStyle = new FigureStyle(Color.BLACK, Color.YELLOW);
@@ -29,11 +31,11 @@ public class SideBar extends VBox {
 
 	private OperationStack stack;
 
-	public SideBar(CanvasState canvasState, RedrawCanvas redrawCanvas) {
+	public SideBar(CanvasState canvasState, StatusPane statusPane, RedrawCanvas redrawCanvas) {
 		super(10);
 		setPadding(new Insets(5));
 		setStyle("-fx-background-color: #999");
-		setPrefWidth(100);
+		setPrefWidth(110);
 
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
@@ -43,7 +45,7 @@ public class SideBar extends VBox {
 		setUtilityTools();
 	}
 
-	public ToggleGroup getToggleGroup() {
+	public MouseActionToggleGroup getToggleGroup() {
 		return toggleGroup;
 	}
 
@@ -82,7 +84,7 @@ public class SideBar extends VBox {
 		borderWidthSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
 			currentStyle.setBorderWidth((int) Math.floor(borderWidthSlider.getValue()));
 			if (canvasState.existsSelected()) {
-				canvasState.getSelectedFigure().getStyle().setBorderWidth(currentStyle.getBorderWidth());
+				canvasState.getSelected().getStyle().setBorderWidth(currentStyle.getBorderWidth());
 				redrawCanvas.redraw();
 			}
 		});
@@ -95,7 +97,7 @@ public class SideBar extends VBox {
 			if (canvasState.existsSelected()) {
 				stack.cleanRedoStack();
 				stack.pushToUndoStack(new Operation(canvasState.getRenderList(), "Cambiar el color de borde de la figura seleccionada"));
-				canvasState.getSelectedFigure().getStyle().setBorderColor(currentStyle.getBorderColor());
+				canvasState.getSelected().getStyle().setBorderColor(currentStyle.getBorderColor());
 				redrawCanvas.redraw();
 			}
 		});
@@ -104,7 +106,7 @@ public class SideBar extends VBox {
 			if (canvasState.existsSelected()) {
 				stack.cleanRedoStack();
 				stack.pushToUndoStack(new Operation(canvasState.getRenderList(), "Cambiar el color de relleno de la figura seleccionada"));
-				canvasState.getSelectedFigure().getStyle().setFillColor(currentStyle.getFillColor());
+				canvasState.getSelected().getStyle().setFillColor(currentStyle.getFillColor());
 				redrawCanvas.redraw();
 			}
 		});
@@ -133,8 +135,9 @@ public class SideBar extends VBox {
 	}
 
 	private void setButtonStyle(ButtonBase button) {
-		button.setMinWidth(90);
+		button.setMinWidth(100);
 		button.setCursor(Cursor.HAND);
+		button.setAlignment(Pos.CENTER);
 	}
 
 }

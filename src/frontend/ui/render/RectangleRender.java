@@ -10,9 +10,15 @@ public class RectangleRender<T extends Rectangle> extends FigureRender<T> {
 	}
 
 	@Override
+	public RectangleRender<T> copy() {
+		return new RectangleRender<>(getStyle(), (T) getFigure().copy());
+	}
+
+	@Override
 	public void drawSketch(GraphicsContext gc) {
 		super.drawSketch(gc);
 		gc.fillRect(getFigure().getStartPoint().getX(), getFigure().getStartPoint().getY(), getFigure().getWidth(), getFigure().getHeight());
 		gc.strokeRect(getFigure().getStartPoint().getX(), getFigure().getStartPoint().getY(), getFigure().getWidth(), getFigure().getHeight());
 	}
+
 }
