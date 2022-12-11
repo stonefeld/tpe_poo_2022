@@ -5,6 +5,7 @@ import backend.model.*;
 import frontend.ui.buttons.*;
 import frontend.ui.buttons.toggle.MouseActionToggleButton;
 import frontend.ui.render.FigureRender;
+import frontend.ui.render.operations.OperationStack;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -23,6 +24,7 @@ public class PaintPane extends BorderPane {
 	// El toggle group para saber que boton esta seleccionado
 	private final ToggleGroup figuresToggleGroup;
 
+	private OperationStack stack = new OperationStack();
 	// StatusBar
 	private final StatusPane statusPane;
 

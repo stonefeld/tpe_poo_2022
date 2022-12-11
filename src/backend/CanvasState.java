@@ -2,14 +2,17 @@ package backend;
 
 import backend.model.Figure;
 import frontend.ui.render.FigureRender;
+import frontend.ui.render.operations.OperationStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CanvasState {
 
-	private final List<FigureRender<? extends Figure>> list = new ArrayList<>();
+	private List<FigureRender<? extends Figure>> list = new ArrayList<>();
 	private FigureRender<? extends Figure> selectedFigure;
+
+	private final OperationStack stack = new OperationStack();
 
 	public void addFigure(FigureRender<? extends Figure> figure) {
 		list.add(figure);
@@ -49,4 +52,15 @@ public class CanvasState {
 		return new ArrayList<>(list);
 	}
 
+	public void setRenderList(List<FigureRender<? extends Figure>> list) {
+		this.list = list;
+	}
+
+	public List<FigureRender<? extends Figure>> getRenderList() {
+		return new ArrayList<>(list);
+	}
+
+	public OperationStack getStack() {
+		return stack;
+	}
 }

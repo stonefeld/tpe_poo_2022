@@ -8,6 +8,8 @@ import frontend.ui.buttons.toggle.SelectionMouseActionToggleButton;
 import frontend.ui.render.FigureStyle;
 import frontend.ui.render.OvalRender;
 import frontend.ui.render.RectangleRender;
+import frontend.ui.render.operations.Operation;
+import frontend.ui.render.operations.OperationStack;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -22,6 +24,8 @@ public class SideBar extends VBox {
 	private final CanvasState canvasState;
 	private final FigureStyle currentStyle = new FigureStyle(Color.BLACK, Color.YELLOW);
 	private final RedrawCanvas redrawCanvas;
+
+	private OperationStack stack;
 
 	public SideBar(CanvasState canvasState, RedrawCanvas redrawCanvas) {
 		super(10);
@@ -86,6 +90,8 @@ public class SideBar extends VBox {
 		borderColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
 			currentStyle.setBorderColor(borderColorPicker.getValue());
 			if (canvasState.existsSelected()) {
+				stack.cleanRedoStack();
+				stack.pushToUndoStack(new Operation(canvasState.getRenderList(), "Cambiar el color de borde de la figura seleccionada"));
 				canvasState.getSelectedFigure().getStyle().setBorderColor(currentStyle.getBorderColor());
 				redrawCanvas.redraw();
 			}
@@ -93,6 +99,8 @@ public class SideBar extends VBox {
 		fillColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
 			currentStyle.setFillColor(fillColorPicker.getValue());
 			if (canvasState.existsSelected()) {
+				stack.cleanRedoStack();
+				stack.pushToUndoStack(new Operation(canvasState.getRenderList(), "Cambiar el color de relleno de la figura seleccionada"));
 				canvasState.getSelectedFigure().getStyle().setFillColor(currentStyle.getFillColor());
 				redrawCanvas.redraw();
 			}
@@ -103,12 +111,16 @@ public class SideBar extends VBox {
 	}
 
 	private void onActionDeleteButton(ActionEvent event) {
+		stack.pushToUndoStack(new Operation(canvasState.getRenderList(), "Borrar Figura"));
 		canvasState.deleteSelected();
 		redrawCanvas.redraw();
 	}
 
 	private void onActionCopyFormatButton(ActionEvent event) {
+		stack.pushToUndoStack(new Operation(canvasState.getRenderList(), "Copiar Formato"));
+
 		// TODO
+
 	}
 
 	private void setButtonStyle(ButtonBase button) {

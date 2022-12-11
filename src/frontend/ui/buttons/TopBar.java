@@ -3,6 +3,10 @@ package frontend.ui.buttons;
 import backend.CanvasState;
 import com.sun.javafx.scene.web.skin.HTMLEditorSkin;
 import frontend.ui.RedrawCanvas;
+import frontend.ui.render.operations.Operation;
+import frontend.ui.render.operations.OperationStack;
+import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -13,12 +17,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.util.Observable;
 import java.util.ResourceBundle;
 
 public class TopBar extends VBox {
 
 	private final CanvasState canvasState;
 	private final RedrawCanvas redrawCanvas;
+
+	private OperationStack stack;
+
 
 	public TopBar(CanvasState canvasState, RedrawCanvas redrawCanvas) {
 		super(10);
@@ -28,9 +36,10 @@ public class TopBar extends VBox {
 
 		this.canvasState = canvasState;
 		this.redrawCanvas = redrawCanvas;
-
+		this.stack = canvasState.getStack();
 		setCopyPasteButtons();
 		setUndoRedoButtons();
+
 	}
 
 	private void setCopyPasteButtons() {
@@ -61,6 +70,7 @@ public class TopBar extends VBox {
 		Label undoLabel = new Label("");
 		Label undoNumber = new Label("0");
 
+
 		String redoIconPath = ResourceBundle.getBundle(HTMLEditorSkin.class.getName()).getString("redoIcon");
 		Image redoIcon = new Image(HTMLEditorSkin.class.getResource(redoIconPath).toString());
 		Button redoButton = new Button("Rehacer", new ImageView(redoIcon));
@@ -70,11 +80,32 @@ public class TopBar extends VBox {
 		HBox undoRedoBox = new HBox(10);
 		setHBoxStyle(undoRedoBox);
 
+
 		Node[] undoRedoItems = {undoLabel, undoNumber, undoButton, redoButton, redoNumber, redoLabel};
 		undoRedoBox.getChildren().addAll(undoRedoItems);
 		undoRedoBox.setAlignment(Pos.CENTER);
 		getChildren().add(undoRedoBox);
+		undoButton.setOnAction(this::undoButtonAction);
+		redoButton.setOnAction(this::redoButtonAction);
 	}
+
+	private void undoButtonAction(ActionEvent actionEvent) {
+		if(!stack.undoStackEmpty()){
+			Operation undoOperation = stack.undo();
+			stack.pushToRedoStack(new Operation(canvasState.getRenderList(), undoOperation.toString()));
+			canvasState.setRenderList(undoOperation.getState());
+			redrawCanvas.redraw();
+		}
+	}
+	private void redoButtonAction(ActionEvent actionEvent){
+		if(!stack.redoStackEmpty()) {
+			Operation redoOperation = stack.redo();
+			stack.pushToUndoStack(new Operation(canvasState.getRenderList(), redoOperation.toString()));
+			canvasState.setRenderList(redoOperation.getState());
+			redrawCanvas.redraw();
+		}
+	}
+
 
 	private void setHBoxStyle(HBox box) {
 		box.setPadding(new Insets(5));

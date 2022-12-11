@@ -37,8 +37,8 @@ public class SelectionMouseActionToggleButton extends MouseActionToggleButton {
 	@Override
 	public void mouseDraggedAction(Point point) {
 		if (getCanvasState().getSelectedFigure() != null) {
-			double diffX = (point.getX() - lastPoint.getX()) / 100;
-			double diffY = (point.getY() - lastPoint.getY()) / 100;
+			double diffX = (point.getX() - lastPoint.getX()) / 200;
+			double diffY = (point.getY() - lastPoint.getY()) / 200;
 			getCanvasState().getSelectedFigure().getFigure().move(diffX, diffY);
 		}
 	}
