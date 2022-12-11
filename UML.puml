@@ -37,9 +37,7 @@
          + copy(): Figure
          + belongsToSketch(Point): boolean
        }
-       interface CopyPasteActions << interface >> {
-         + action(): void
-       }
+
        class Ellipse extends Oval{
          + Ellipse(Point, Point):
          + copy(): Figure
@@ -212,6 +210,10 @@
        FigureMouseActionToggleButton *-- Point
        MouseActionToggleButton *-- CanvasState
        SelectionMouseActionToggleButton *-- Point
+       SideBar *-- CanvasState
+       SideBar *-- RedrawCanvas
+       TopBar *-- CanvasState
+       TopBar *-- RedrawCanvas
 
 
 
