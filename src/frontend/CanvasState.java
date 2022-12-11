@@ -88,7 +88,11 @@ public class CanvasState {
 	}
 
 	public List<FigureRender<? extends Figure>> getRenderList() {
-		return new ArrayList<>(list);
+		List<FigureRender<? extends Figure>> toReturn = new ArrayList<>();
+		for (FigureRender<? extends Figure> figure : list){
+			toReturn.add(figure.copy());
+		}
+		return toReturn;
 	}
 
 	public OperationStack getStack() {
