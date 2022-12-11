@@ -15,6 +15,12 @@ public class RectangleRender<T extends Rectangle> extends FigureRender<T> {
 		return new RectangleRender<>(getStyle(), (T) getFigure().copy());
 	}
 
+	/**
+	 * Al dibujar la figura, tanto la elipse como el círculo utilizan una función diferente
+	 * del GraphicsContext para dibujar una figura con forma rectangular. Primero se llama a la
+	 * función padre para setear el estilo.
+	 * @param gc El contexto gráfico donde será dibujada la figura.
+	 */
 	@Override
 	public void drawSketch(GraphicsContext gc) {
 		super.drawSketch(gc);

@@ -15,6 +15,12 @@ public class OvalRender<T extends Oval> extends FigureRender<T> {
 		return new OvalRender<>(getStyle(), (T) getFigure().copy());
 	}
 
+	/**
+	 * Al dibujar la figura, tanto la elipse como el círculo utilizan una función diferente
+	 * del GraphicsContext para dibujar una figura con forma ovalada. Primero se llama a la
+	 * función padre para setear el estilo.
+	 * @param gc El contexto gráfico donde será dibujada la figura.
+	 */
 	@Override
 	public void drawSketch(GraphicsContext gc) {
 		super.drawSketch(gc);

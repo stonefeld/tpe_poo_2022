@@ -1,6 +1,6 @@
 package backend.model;
 
-public class Point {
+public class Point implements Movable {
 
 	private double x, y;
 
@@ -29,18 +29,14 @@ public class Point {
 		return Math.sqrt(Math.pow(distanceX(point), 2) + Math.pow(distanceY(point), 2));
 	}
 
+	public Point copy() {
+		return new Point(x, y);
+	}
+
+	@Override
 	public void move(double diffX, double diffY) {
 		x += diffX;
 		y += diffY;
-	}
-
-	public void moveTo(double x, double y) {
-		this.x = x;
-		this.y = y;
-	}
-
-	public Point copy() {
-		return new Point(x, y);
 	}
 
 	@Override
