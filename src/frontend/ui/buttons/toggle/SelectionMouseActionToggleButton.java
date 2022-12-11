@@ -27,11 +27,16 @@ public class SelectionMouseActionToggleButton extends MouseActionToggleButton {
 			}
 			figure.deselect();
 		}
+		getCanvasState().deselectFigure();
 		if (aux != null) {
-			aux.select();
 			label.append(aux.getFigure());
+			if (getCanvasState().existsStyleToCopy()) {
+				aux.setStyle(getCanvasState().getStyleToCopy());
+			} else {
+				aux.select();
+				getCanvasState().selectFigure(aux);
+			}
 		}
-		getCanvasState().selectFigure(aux);
 	}
 
 	@Override

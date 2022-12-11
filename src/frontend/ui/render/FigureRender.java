@@ -18,6 +18,12 @@ public class FigureRender<T extends Figure> {
 		return figure;
 	}
 
+	public void setStyle(FigureStyle style) {
+		this.style.setBorderColor(style.getBorderColor());
+		this.style.setFillColor(style.getFillColor());
+		this.style.setBorderWidth(style.getBorderWidth());
+	}
+
 	public FigureStyle getStyle() {
 		return style;
 	}
