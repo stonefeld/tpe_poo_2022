@@ -5,7 +5,6 @@ import frontend.ui.buttons.toggle.MouseActionToggleGroup;
 import frontend.ui.buttons.toolbar.SideBar;
 import frontend.ui.buttons.toolbar.TopBar;
 import frontend.ui.render.FigureRender;
-import frontend.ui.render.operations.OperationStack;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
@@ -17,18 +16,19 @@ public class PaintPane extends BorderPane {
 	private final CanvasState canvasState;
 
 	// Canvas y relacionados
-	private final Canvas canvas = new Canvas(800, 600);
-	private final GraphicsContext gc = canvas.getGraphicsContext2D();
+	private final Canvas canvas;
+	private final GraphicsContext gc;
 
 	// El toggle group para saber que boton esta seleccionado
 	private final MouseActionToggleGroup figuresToggleGroup;
 
-	private OperationStack stack = new OperationStack();
 	// StatusBar
 	private final StatusPane statusPane;
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
+		this.canvas = new Canvas(canvasState.getCanvasWidth(), canvasState.getCanvasHeight());
+		this.gc = canvas.getGraphicsContext2D();
 		this.statusPane = statusPane;
 
 		// Configurando los botones

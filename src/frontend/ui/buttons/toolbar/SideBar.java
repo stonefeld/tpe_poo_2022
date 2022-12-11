@@ -28,8 +28,7 @@ public class SideBar extends VBox {
 	private final StatusPane statusPane;
 	private final FigureStyle currentStyle = new FigureStyle(Color.BLACK, Color.YELLOW);
 	private final RedrawCanvas redrawCanvas;
-
-	private OperationStack stack;
+	private final OperationStack stack;
 
 	public SideBar(CanvasState canvasState, StatusPane statusPane, RedrawCanvas redrawCanvas) {
 		super(10);
@@ -41,6 +40,7 @@ public class SideBar extends VBox {
 		this.statusPane = statusPane;
 		this.redrawCanvas = redrawCanvas;
 		this.stack = canvasState.getStack();
+
 		setFigureButtons();
 		setUtilityTools();
 	}
@@ -118,9 +118,6 @@ public class SideBar extends VBox {
 		canvasState.deleteSelected();
 		redrawCanvas.redraw();
 	}
-
-
-
 
 	private void onActionCopyFormatButton(ActionEvent event) {
 		if (canvasState.existsSelected()) {

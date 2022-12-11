@@ -2,10 +2,8 @@ package frontend;
 
 import backend.model.Figure;
 import frontend.ui.render.FigureRender;
-import frontend.ui.render.operations.OperationStack;
-
 import frontend.ui.render.FigureStyle;
-
+import frontend.ui.render.operations.OperationStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +15,20 @@ public class CanvasState {
 	private FigureRender<? extends Figure> copiedFigure;
 	private FigureStyle styleToCopy;
 	private final OperationStack stack = new OperationStack();
+	private final double canvasHeight, canvasWidth;
+
+	public CanvasState(double canvasHeight, double canvasWidth) {
+		this.canvasHeight = canvasHeight;
+		this.canvasWidth = canvasWidth;
+	}
+
+	public double getCanvasHeight() {
+		return canvasHeight;
+	}
+
+	public double getCanvasWidth() {
+		return canvasWidth;
+	}
 
 	public void addFigure(FigureRender<? extends Figure> figure) {
 		list.add(figure);
@@ -60,6 +72,8 @@ public class CanvasState {
 	public FigureRender<? extends Figure> getCopied() {
 		FigureRender<? extends Figure> ret = copiedFigure;
 		copiedFigure = copiedFigure.copy();
+		ret.getFigure().move(canvasWidth / 2 - ret.getFigure().getStartPoint().getX(),
+				canvasHeight / 2 - ret.getFigure().getStartPoint().getY());
 		return ret;
 	}
 

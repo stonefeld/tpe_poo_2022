@@ -4,13 +4,17 @@ import frontend.CanvasState;
 import backend.model.Figure;
 import backend.model.Point;
 import frontend.ui.render.FigureRender;
+import frontend.ui.render.operations.Operation;
+import frontend.ui.render.operations.OperationStack;
 
 public class SelectionMouseActionToggleButton extends MouseActionToggleButton {
 
 	private Point lastPoint;
+	private final OperationStack stack;
 
 	public SelectionMouseActionToggleButton(String description, CanvasState canvasState) {
 		super(description, canvasState);
+		this.stack = canvasState.getStack();
 	}
 
 	@Override
@@ -31,6 +35,7 @@ public class SelectionMouseActionToggleButton extends MouseActionToggleButton {
 		if (aux != null) {
 			label.append(aux.getFigure());
 			if (getCanvasState().existsStyleToCopy()) {
+				stack.addOperation(new Operation(getCanvasState().getRenderList(), "Copiar el formato de una figura"));
 				aux.setStyle(getCanvasState().getStyleToCopy());
 			} else {
 				aux.select();

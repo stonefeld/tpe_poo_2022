@@ -6,20 +6,22 @@ import frontend.ui.render.FigureRender;
 import java.util.List;
 
 public class Operation {
-    private List<FigureRender<? extends Figure>> state;
-    private String operationLabel;
 
-    public Operation(List<FigureRender<? extends Figure>> state, String operationLabel) {
-        this.state = state;
-        this.operationLabel = operationLabel;
-    }
+	private final List<FigureRender<? extends Figure>> state;
+	private final String operationLabel;
 
-    public List<FigureRender<? extends Figure>> getState() {
-        return state;
-    }
+	public Operation(List<FigureRender<? extends Figure>> state, String operationLabel) {
+		this.state = state;
+		this.operationLabel = operationLabel;
+	}
 
-    @Override
-    public String toString() {
-        return operationLabel;
-    }
+	public List<FigureRender<? extends Figure>> getState() {
+		return state;
+	}
+
+	@Override
+	public String toString() {
+		return operationLabel;
+	}
+
 }
