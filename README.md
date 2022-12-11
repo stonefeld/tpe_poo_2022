@@ -9,6 +9,7 @@
 * [Tarea 1 - Personalización de Figuras](#tarea-1---personalización-de-figuras)
 * [Tarea 2 - Copiar, Cortar y Pegar](#tarea-2---copiar-cortar-y-pegar)
 * [Tarea 3 - Deshacer y Rehacer](#tarea-3---deshacer-y-rehacer)
+* [Diagrama UML](#diagrama-uml)
 
 ## Autores
 
@@ -131,3 +132,7 @@ private String getUndoStackMessage() {
 	return String.format("%s %d", peekUndo().toString(), undoSize());
 }
 ```
+
+## Diagrama UML
+
+![](misc/uml-pic.png)
