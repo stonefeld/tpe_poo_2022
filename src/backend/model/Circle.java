@@ -31,4 +31,5 @@ public class Circle extends Oval {
 		Point end = new Point(center.getX(), center.getY() + radius);
 		return new Circle(center, end);
 	}
+
 }

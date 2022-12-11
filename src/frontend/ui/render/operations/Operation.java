@@ -8,12 +8,12 @@ import java.util.List;
 public class Operation {
 
 	private final List<FigureRender<? extends Figure>> state;
+	private final String description;
 	private final FigureRender<? extends Figure> copiedFigure;
-	private final String operationLabel;
 
-	public Operation(List<FigureRender<? extends Figure>> state, String operationLabel, FigureRender<? extends Figure> copiedFigure) {
+	public Operation(List<FigureRender<? extends Figure>> state, String description, FigureRender<? extends Figure> copiedFigure) {
 		this.state = state;
-		this.operationLabel = operationLabel;
+		this.description = description;
 		this.copiedFigure = copiedFigure;
 	}
 
@@ -27,7 +27,7 @@ public class Operation {
 
 	@Override
 	public String toString() {
-		return operationLabel;
+		return description;
 	}
 
 }

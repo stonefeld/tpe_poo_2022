@@ -3,8 +3,6 @@ package frontend.ui.buttons.toolbar;
 import com.sun.javafx.scene.web.skin.HTMLEditorSkin;
 import frontend.CanvasState;
 import frontend.ui.RedrawCanvas;
-import frontend.ui.render.operations.Operation;
-import frontend.ui.render.operations.OperationStack;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,7 +19,6 @@ public class TopBar extends VBox {
 
 	private final CanvasState canvasState;
 	private final RedrawCanvas redrawCanvas;
-	private final OperationStack stack;
 
 	public TopBar(CanvasState canvasState, RedrawCanvas redrawCanvas) {
 		super(10);
@@ -31,7 +28,6 @@ public class TopBar extends VBox {
 
 		this.canvasState = canvasState;
 		this.redrawCanvas = redrawCanvas;
-		this.stack = canvasState.getStack();
 
 		setCopyPasteButtons();
 		setUndoRedoButtons();
@@ -77,7 +73,12 @@ public class TopBar extends VBox {
 		HBox undoRedoBox = new HBox(10);
 		setHBoxStyle(undoRedoBox);
 
-		Node[] undoRedoItems = {stack.getUndoLabel(), undoButton, redoButton, stack.getRedoLabel()};
+		Node[] undoRedoItems = {
+				canvasState.getOperationStack().getUndoLabel(),
+				undoButton,
+				redoButton,
+				canvasState.getOperationStack().getRedoLabel()
+		};
 		undoRedoBox.getChildren().addAll(undoRedoItems);
 		undoRedoBox.setAlignment(Pos.CENTER);
 		getChildren().add(undoRedoBox);
@@ -85,7 +86,7 @@ public class TopBar extends VBox {
 
 	private void onActionCutButton() {
 		if (canvasState.existsSelected()) {
-			stack.addOperation(new Operation(canvasState.getRenderList(), "Cortar Figura", canvasState.getCopied()));
+			canvasState.addOperation("Cortar Figura");
 			canvasState.copySelected();
 			canvasState.deleteSelected();
 			redrawCanvas.redraw();
@@ -94,36 +95,31 @@ public class TopBar extends VBox {
 
 	private void onActionCopyButton() {
 		if (canvasState.existsSelected()) {
-			stack.addOperation(new Operation(canvasState.getRenderList(), "Copiar Figura", canvasState.getCopied()));
+			canvasState.addOperation("Copiar Figura");
 			canvasState.copySelected();
 		}
 	}
 
 	private void onActionPasteButton() {
 		if (canvasState.existsCopied()) {
-//			FigureRender<? extends Figure> aux = canvasState.getCopied();
+//			FigureRender<? extends Figure> aux = canvasState.paste();
 //			aux.getFigure().move();
 //			canvasState.addFigure(aux);
-			stack.addOperation(new Operation(canvasState.getRenderList(), "Pegar Figura", canvasState.getCopied()));
-
-			canvasState.addFigure(canvasState.getCopied());
+			canvasState.addOperation("Pegar Figura");
+			canvasState.addFigure(canvasState.paste());
 			redrawCanvas.redraw();
 		}
 	}
 
 	private void onActionUndoButton(ActionEvent actionEvent) {
-		if (!stack.undoStackEmpty()) {
-			canvasState.setRenderList(stack.undo(canvasState.getRenderList(), canvasState.getCopied()).getState());
-			redrawCanvas.redraw();
-		}
+		canvasState.undo();
+		redrawCanvas.redraw();
 	}
 
 	private void onActionRedoButton(ActionEvent actionEvent) {
-		if (!stack.redoStackEmpty()) {
-			canvasState.setRenderList(stack.redo(canvasState.getRenderList(), canvasState.getCopied()).getState());
-			canvasState.deselectFigure();
-			redrawCanvas.redraw();
-		}
+		canvasState.redo();
+		canvasState.deselectFigure();
+		redrawCanvas.redraw();
 	}
 
 	private void setHBoxStyle(HBox box) {

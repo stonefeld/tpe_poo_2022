@@ -3,6 +3,7 @@ package frontend;
 import backend.model.Figure;
 import frontend.ui.render.FigureRender;
 import frontend.ui.render.FigureStyle;
+import frontend.ui.render.operations.Operation;
 import frontend.ui.render.operations.OperationStack;
 
 import java.util.ArrayList;
@@ -10,12 +11,12 @@ import java.util.List;
 
 public class CanvasState {
 
+	private final OperationStack stack = new OperationStack();
+	private final double canvasHeight, canvasWidth;
 	private List<FigureRender<? extends Figure>> list = new ArrayList<>();
 	private FigureRender<? extends Figure> selectedFigure;
 	private FigureRender<? extends Figure> copiedFigure;
 	private FigureStyle styleToCopy;
-	private final OperationStack stack = new OperationStack();
-	private final double canvasHeight, canvasWidth;
 
 	public CanvasState(double canvasHeight, double canvasWidth) {
 		this.canvasHeight = canvasHeight;
@@ -69,13 +70,10 @@ public class CanvasState {
 		copiedFigure = selectedFigure.copy();
 	}
 
-	public FigureRender<? extends Figure> getCopied() {
-		FigureRender<? extends Figure> ret = null;
-		if(existsCopied()) {
-			ret = copiedFigure.copy();
-		//	ret.getFigure().move(canvasWidth / 2 - ret.getFigure().getStartPoint().getX(),
-		//			canvasHeight / 2 - ret.getFigure().getStartPoint().getY());
-		}
+	public FigureRender<? extends Figure> paste() {
+		FigureRender<? extends Figure> ret = copiedFigure.copy();
+		ret.getFigure().move(canvasWidth / 2 - ret.getFigure().getStartPoint().getX(),
+				canvasHeight / 2 - ret.getFigure().getStartPoint().getY());
 		return ret;
 	}
 
@@ -99,20 +97,44 @@ public class CanvasState {
 	}
 
 	// OPERATION
-	public void setRenderList(List<FigureRender<? extends Figure>> list) {
-		this.list = list;
+	public void addOperation(String description) {
+		stack.addOperation(new Operation(getRenderList(), description, getCopiedFigure()));
 	}
 
-	public List<FigureRender<? extends Figure>> getRenderList() {
+	public void undo() {
+		if (!stack.undoStackEmpty()) {
+			Operation undoOperation = stack.undo(getRenderList(), getCopiedFigure());
+			list = undoOperation.getState();
+			copiedFigure = undoOperation.getCopiedFigure();
+		}
+	}
+
+	public void redo() {
+		if (!stack.redoStackEmpty()) {
+			Operation redoOperation = stack.redo(getRenderList(), getCopiedFigure());
+			list = redoOperation.getState();
+			copiedFigure = redoOperation.getCopiedFigure();
+		}
+	}
+
+	public OperationStack getOperationStack() {
+		return stack;
+	}
+
+	private List<FigureRender<? extends Figure>> getRenderList() {
 		List<FigureRender<? extends Figure>> toReturn = new ArrayList<>();
-		for (FigureRender<? extends Figure> figure : list){
+		for (FigureRender<? extends Figure> figure : list) {
 			toReturn.add(figure.copy());
 		}
 		return toReturn;
 	}
 
-	public OperationStack getStack() {
-		return stack;
+	private FigureRender<? extends Figure> getCopiedFigure() {
+		FigureRender<? extends Figure> copied = copiedFigure;
+		if (copied != null) {
+			copied = copied.copy();
+		}
+		return copied;
 	}
 
 }

@@ -10,8 +10,6 @@ import frontend.ui.buttons.toggle.SelectionMouseActionToggleButton;
 import frontend.ui.render.FigureStyle;
 import frontend.ui.render.OvalRender;
 import frontend.ui.render.RectangleRender;
-import frontend.ui.render.operations.Operation;
-import frontend.ui.render.operations.OperationStack;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -28,7 +26,6 @@ public class SideBar extends VBox {
 	private final StatusPane statusPane;
 	private final FigureStyle currentStyle = new FigureStyle(Color.BLACK, Color.YELLOW);
 	private final RedrawCanvas redrawCanvas;
-	private final OperationStack stack;
 
 	public SideBar(CanvasState canvasState, StatusPane statusPane, RedrawCanvas redrawCanvas) {
 		super(10);
@@ -39,7 +36,6 @@ public class SideBar extends VBox {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 		this.redrawCanvas = redrawCanvas;
-		this.stack = canvasState.getStack();
 
 		setFigureButtons();
 		setUtilityTools();
@@ -95,7 +91,7 @@ public class SideBar extends VBox {
 		borderColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
 			currentStyle.setBorderColor(borderColorPicker.getValue());
 			if (canvasState.existsSelected()) {
-				stack.addOperation(new Operation(canvasState.getRenderList(), "Cambiar el color de borde de la figura seleccionada", canvasState.getCopied()));
+				canvasState.addOperation("Cambiar el color de borde de la figura seleccionada");
 				canvasState.getSelected().getStyle().setBorderColor(currentStyle.getBorderColor());
 				redrawCanvas.redraw();
 			}
@@ -103,7 +99,7 @@ public class SideBar extends VBox {
 		fillColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
 			currentStyle.setFillColor(fillColorPicker.getValue());
 			if (canvasState.existsSelected()) {
-				stack.addOperation(new Operation(canvasState.getRenderList(), "Cambiar el color de relleno de la figura seleccionada", canvasState.getCopied()));
+				canvasState.addOperation("Cambiar el color de relleno de la figura seleccionada");
 				canvasState.getSelected().getStyle().setFillColor(currentStyle.getFillColor());
 				redrawCanvas.redraw();
 			}
@@ -114,7 +110,7 @@ public class SideBar extends VBox {
 	}
 
 	private void onActionDeleteButton(ActionEvent event) {
-		stack.addOperation(new Operation(canvasState.getRenderList(), "Borrar Figura", canvasState.getCopied()));
+		canvasState.addOperation("Borrar Figura");
 		canvasState.deleteSelected();
 		redrawCanvas.redraw();
 	}
