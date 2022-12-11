@@ -31,7 +31,7 @@ public class SelectionMouseActionToggleButton extends MouseActionToggleButton {
 		if (aux != null) {
 			label.append(aux.getFigure());
 			if (getCanvasState().existsStyleToCopy()) {
-				getCanvasState().addOperation("Copiar el formato de una figura");
+				getCanvasState().addOperation(String.format("Aplicar formato copiado a %s", aux.getFigure().name()));
 				aux.setStyle(getCanvasState().getStyleToCopy());
 			} else {
 				aux.select();

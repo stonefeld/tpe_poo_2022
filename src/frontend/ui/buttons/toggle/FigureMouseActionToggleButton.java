@@ -3,6 +3,7 @@ package frontend.ui.buttons.toggle;
 import backend.model.Figure;
 import backend.model.Point;
 import frontend.CanvasState;
+import frontend.ui.render.FigureRender;
 import frontend.ui.render.FigureStyle;
 import frontend.ui.render.SketchCreator;
 
@@ -26,8 +27,9 @@ public class FigureMouseActionToggleButton<T extends Figure> extends MouseAction
 	@Override
 	public void mouseReleasedAction(Point point) {
 		if (Figure.isValid(startPoint, point)) {
-			getCanvasState().addOperation("Dibujar una Figura");
-			getCanvasState().addFigure(sketchCreator.createSketch(startPoint, point, currentStyle));
+			FigureRender<? extends Figure> aux = sketchCreator.createSketch(startPoint, point, currentStyle);
+			getCanvasState().addOperation(String.format("Dibujar %s", aux.getFigure().name()));
+			getCanvasState().addFigure(aux);
 			startPoint = null;
 		}
 	}

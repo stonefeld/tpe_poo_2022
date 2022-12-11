@@ -8,6 +8,10 @@ public class Ellipse extends Oval {
 						(Math.abs((endPoint.getY() + startPoint.getY())) / 2)));
 	}
 
+	public String name() {
+		return "Elipse";
+	}
+
 	@Override
 	public String toString() {
 		return String.format("Elipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]", getCenterPoint(), getWidth(), getHeight());
