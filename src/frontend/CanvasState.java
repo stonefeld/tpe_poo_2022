@@ -72,8 +72,9 @@ public class CanvasState {
 
 	public FigureRender<? extends Figure> paste() {
 		FigureRender<? extends Figure> ret = copiedFigure.copy();
-		ret.getFigure().move(canvasWidth / 2 - ret.getFigure().getStartPoint().getX(),
-				canvasHeight / 2 - ret.getFigure().getStartPoint().getY());
+		Figure retFigure = ret.getFigure();
+		retFigure.move((canvasWidth / 2) - (retFigure.getStartPoint().getX() + retFigure.getEndPoint().getX()) /2,
+				(canvasHeight / 2) - (retFigure.getStartPoint().getY() + retFigure.getEndPoint().getY()) /2);
 		return ret;
 	}
 
