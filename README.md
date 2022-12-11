@@ -6,9 +6,9 @@
 * [Objetivo](#objetivo)
 * [Descripción](#descripción)
 * [Funcionamiento](#funcionamiento)
-* [Tarea 1 - Personalización de Figuras](#tarea1)
-* [Tarea 2 - Copiar, Cortar y Pegar](#tarea2)
-* [Tarea 3 - Deshacer y Rehacer](#tarea3)
+* [Tarea 1 - Personalización de Figuras](#tarea-1---personalización-de-figuras)
+* [Tarea 2 - Copiar, Cortar y Pegar](#tarea-2---copiar-cortar-y-pegar)
+* [Tarea 3 - Deshacer y Rehacer](#tarea-3---deshacer-y-rehacer)
 
 ## Autores
 
@@ -27,7 +27,13 @@ El programa consta de una aplicación de dibujo, estilo Paint de Microsoft, el c
 Para la fácil separación del front-end y el back-end, estos dos se encuentran totalmente separados. Dentro del front-end se encuentra diferentes archivos los cuales se encargarán de todo tipo de acción o experiencia con el usuario, y dentro del back-end se podrá encontrar todo el procesamiento interno que realiza el programa.
 
 #### Front-end
-Recorriendo el front-end nos encontramos con todos los archivos tipo java encargados de la composición del “Frame”. Como se puede ver, se utilizó una separación tipo “VBox” para separar el “Frame” en dos, siendo el menú el que se encuentre más elevado de los dos. Ahora sí, pasando a la segunda división, se utilizó una división de “BorderPane” ya que nos resultó la más fácil para situar barras de herramientas al lado izquierdo de la pantalla como también a la parte superior de la misma (el canvas se situa en el lugar restante, situado a la derecha de la pantalla). Esta asignación es muy sencilla debido a las funciones “setTop” y “setLeft" que contiene “BorderPane”.
+Recorriendo el front-end nos encontramos con todos los archivos tipo java encargados de la composición del “Frame”. Tambien tenemos la clase “CanvasState” cuya funcionalidad es todo procesamiento que ocurra en el canvas.
+
+```java
+private final List<FigureRender<? extends Figure>> list = new ArrayList<>();
+```
+
+Al tener una lista de las figuras presentes en la pantalla, se vuelven sencillas las actividades como eliminar y agregar distintas figuras, como también copiar el formato de las mismas. Como se puede ver, se utilizó una separación tipo “VBox” para separar el “Frame” en dos, siendo el menú el que se encuentre más elevado de los dos. Ahora sí, pasando a la segunda división, se utilizó una división de “BorderPane” ya que nos resultó la más fácil para situar barras de herramientas al lado izquierdo de la pantalla como también a la parte superior de la misma (el canvas se situa en el lugar restante, situado a la derecha de la pantalla). Esta asignación es muy sencilla debido a las funciones “setTop” y “setLeft" que contiene “BorderPane”.
 
 ```java
 setTop(topBar);
@@ -37,17 +43,41 @@ setRight(canvas);
 
 La barra de herramientas situada a lado izquierdo de la pantalla es distribuida utilizando una “VBox” para que los elementos quedan alineados uno encima del otro y por último la barra de herramientas situada en la parte superior de la pantalla será distribuida utilizando nuevamente una “VBox” para poder separarla en dos, la parte superior de esta conteniendo los botones de copiar, cortar y pegar, y la parte inferior de esta conteniendo los botones de rehacer y deshacer. Una vez conseguida esta separación se la distribuye con una “HBox” para que los elementos queden asignados uno al lado del otro.
 
-#### Back-end
-En el back-end encontramos dos tipos de archivos distintos separados por su funcionalidad.
-Por primer plano tenemos todas las clases de las figuras las cuales implementan una interfaz “MovableSketch” la cual es la encargada de permitir a la figura desplazarse por alrededor del canvas. Por otro lado tenemos la clase “CanvasState” cuya funcionalidad es todo procesamiento que ocurra en el canvas.
+Mirando la carpeta User Interface (ui), podemos ver la separación entre los botones, los renders y la interfaz funcional "RedrawCanvas". Junto con los botones vamos a poder observar, los botones tipo toggle, que se pueden desactivar y activar, las barras de herramienta, como también la interfaz "MouseActions" que contiene todo tipo de acción realizable con el mouse. Siguiendo con los renders, estos serán los encargados de dibujar nuevamente el canvas cada vez que se realiza una acción. Dentro de “operations” se encuentra la lógica detrás del deshacer y rehacer, utilizando dos stacks de operaciones.
 
 ```java
-private final List<FigureRender<? extends Figure>> list = new ArrayList<>();
+private final Stack<Operation> redoStack = new Stack<>();
+private final Stack<Operation> undoStack = new Stack<>();
 ```
 
-Al tener una lista de las figuras presentes en la pantalla, se vuelven sencillas las actividades como eliminar y agregar distintas figuras, como también copiar el formato de las mismas.
+Después podemos ver los distintos renders para cada figura, los cuales se encargan de crear la nueva figura y asignarle un estilo, a través de la clase “FigureStyle”. Por ultimo tenemos "RedrawCanvas", interfaz con la funcionalidad de dibujar nuevamente el canvas con cada cambio efectuado en el mismo.
+
+#### Back-end
+En el back-end encontramos todas las clases de las figuras las cuales implementan una interfaz “MovableSketch” la cual es la encargada de permitir a la figura desplazarse por alrededor del canvas.
 
 ## Tarea 1 - Personalización de Figuras
+
+Para agregar las nuevas secciones de borde, relleno y copiar formato, simplemente se tuvo que investigar el uso de las clases Slider, Color y ColorPicker y luego simplemente añadirlas a “SideBar” previamente mencionada.
+
+```java
+Slider borderWidthSlider = new Slider(1, 50, currentStyle.getBorderWidth());
+```
+```java
+ColorPicker borderColorPicker = new ColorPicker(currentStyle.getBorderColor());
+```
+
+Luego de añadir estas opciones al menú lateral del canvas, se tuvo que crear la funciones para agregar las funcionalidades a estas opciones. Con el Slider se utiliza el setBorderWidth para cambiar el borde de la figura, con el ColorPicker se utiliza el setBorderColor/setFillColor para cambiar el color del borde o del relleno.
+
+En el caso de copiar formato se le asigna un setOnAction el cual permite que cada vez que sea activado se ejecute la funcion de onActionCopyFormatButton. Esta funcion se guarda el formato de la figura seleccionada y luego si otra figura es seleccionada y hay un existe un estilo el cual fue copiado anteriormente, se le aplica este estilo a la figura seleccionada, de no existir este estilo, la figura simplemente se selecciona.
+
+```java
+if (getCanvasState().existsStyleToCopy()) {
+  aux.setStyle(getCanvasState().getStyleToCopy());
+} else {
+  aux.select();
+  getCanvasState().selectFigure(aux);
+}
+```
 
 ## Tarea 2 - Copiar, Cortar y Pegar
 
