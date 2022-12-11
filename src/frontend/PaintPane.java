@@ -31,7 +31,7 @@ public class PaintPane extends BorderPane {
 		this.statusPane = statusPane;
 
 		// Configurando los botones
-		SideBar sideBar = new SideBar(canvasState, this::redrawCanvas);
+		SideBar sideBar = new SideBar(canvasState, statusPane, this::redrawCanvas);
 		figuresToggleGroup = sideBar.getToggleGroup();
 		TopBar topBar = new TopBar(canvasState, this::redrawCanvas);
 

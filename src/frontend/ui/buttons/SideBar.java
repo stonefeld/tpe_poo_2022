@@ -2,6 +2,7 @@ package frontend.ui.buttons;
 
 import backend.CanvasState;
 import backend.model.*;
+import frontend.StatusPane;
 import frontend.ui.RedrawCanvas;
 import frontend.ui.buttons.toggle.FigureMouseActionToggleButton;
 import frontend.ui.buttons.toggle.SelectionMouseActionToggleButton;
@@ -20,16 +21,18 @@ public class SideBar extends VBox {
 
 	private final ToggleGroup toggleGroup = new ToggleGroup();
 	private final CanvasState canvasState;
+	private final StatusPane statusPane;
 	private final FigureStyle currentStyle = new FigureStyle(Color.BLACK, Color.YELLOW);
 	private final RedrawCanvas redrawCanvas;
 
-	public SideBar(CanvasState canvasState, RedrawCanvas redrawCanvas) {
+	public SideBar(CanvasState canvasState, StatusPane statusPane, RedrawCanvas redrawCanvas) {
 		super(10);
 		setPadding(new Insets(5));
 		setStyle("-fx-background-color: #999");
 		setPrefWidth(100);
 
 		this.canvasState = canvasState;
+		this.statusPane = statusPane;
 		this.redrawCanvas = redrawCanvas;
 
 		setFigureButtons();
@@ -103,12 +106,21 @@ public class SideBar extends VBox {
 	}
 
 	private void onActionDeleteButton(ActionEvent event) {
-		canvasState.deleteSelected();
-		redrawCanvas.redraw();
+		if (canvasState.existsSelected()) {
+			canvasState.deleteSelected();
+			redrawCanvas.redraw();
+		} else {
+			statusPane.updateStatus("Debe seleccionar un elemento primero");
+		}
 	}
 
 	private void onActionCopyFormatButton(ActionEvent event) {
-		// TODO
+		if (canvasState.existsSelected()) {
+			canvasState.setStyleToCopy();
+			statusPane.updateStatus("Seleccione ahora el elemento que desea aplicarle el formato copiado");
+		} else {
+			statusPane.updateStatus("Debe seleccionar un elemento primero");
+		}
 	}
 
 	private void setButtonStyle(ButtonBase button) {

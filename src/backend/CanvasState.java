@@ -2,6 +2,7 @@ package backend;
 
 import backend.model.Figure;
 import frontend.ui.render.FigureRender;
+import frontend.ui.render.FigureStyle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ public class CanvasState {
 
 	private final List<FigureRender<? extends Figure>> list = new ArrayList<>();
 	private FigureRender<? extends Figure> selectedFigure;
+	private FigureStyle styleToCopy;
 
 	public void addFigure(FigureRender<? extends Figure> figure) {
 		list.add(figure);
@@ -19,17 +21,12 @@ public class CanvasState {
 		list.remove(figure);
 	}
 
-	public void deleteFigure(Figure figure) {
-		for (FigureRender<? extends Figure> element : list) {
-			if (element.getFigure().equals(figure)) {
-				list.remove(element);
-				return;
-			}
-		}
-	}
-
 	public void deleteSelected() {
 		deleteFigure(selectedFigure);
+		deselectFigure();
+	}
+
+	public void deselectFigure() {
 		selectedFigure = null;
 	}
 
@@ -43,6 +40,20 @@ public class CanvasState {
 
 	public FigureRender<? extends Figure> getSelectedFigure() {
 		return selectedFigure;
+	}
+
+	public FigureStyle getStyleToCopy() {
+		FigureStyle ret = styleToCopy;
+		styleToCopy = null;
+		return ret;
+	}
+
+	public void setStyleToCopy() {
+		styleToCopy = selectedFigure.getStyle();
+	}
+
+	public boolean existsStyleToCopy() {
+		return styleToCopy != null;
 	}
 
 	public Iterable<FigureRender<? extends Figure>> figures() {
