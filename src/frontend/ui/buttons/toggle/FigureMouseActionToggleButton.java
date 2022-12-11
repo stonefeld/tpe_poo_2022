@@ -19,11 +19,22 @@ public class FigureMouseActionToggleButton<T extends Figure> extends MouseAction
 		this.currentStyle = currentStyle;
 	}
 
+	/**
+	 * Al presionar el mouse, se espera que se desee crear una nueva figura por lo que se
+	 * establece el startPoint.
+	 * @param point El punto donde fue accionado el evento.
+	 */
 	@Override
 	public void mousePressedAction(Point point) {
 		startPoint = point;
 	}
 
+	/**
+	 * Al soltar el botón del mouse, se verifica si el punto final es válido. En caso de
+	 * serlo, se crea una figura utilizando el sketchCreator que fue definido al momento
+	 * de crear el botón.
+	 * @param point El punto donde fue accionado el evento.
+	 */
 	@Override
 	public void mouseReleasedAction(Point point) {
 		if (Figure.isValid(startPoint, point)) {

@@ -1,13 +1,5 @@
 package backend.model;
 
-/*
-Las figuras son sketch, pues se dibujan en el canvas
-*/
-/*
-Un sketch se crea a partir de 2 puntos que se obtienen como eventos del mouse.
-Vamos a construir todas nuestras clases hijas mirando desde el punto de vista del canvas y estos 2 puntos StartPoint y EndPoint.
-Entendiendo que para cada tipo de Figura hay una relación entre estos 2 y los puntos que la caracterizan.
-*/
 public abstract class Figure implements MovableSketch {
 
 	private final Point startPoint, endPoint;
@@ -25,10 +17,6 @@ public abstract class Figure implements MovableSketch {
 		return endPoint.distanceY(startPoint);
 	}
 
-	public static boolean isValid(Point startPoint, Point endPoint) {
-		return startPoint != null && startPoint.getX() < endPoint.getX() && startPoint.getY() < endPoint.getY();
-	}
-
 	public Point getStartPoint() {
 		return startPoint;
 	}
@@ -44,6 +32,19 @@ public abstract class Figure implements MovableSketch {
 	@Override
 	public Point[] getPoints() {
 		return new Point[]{startPoint, endPoint};
+	}
+
+	/**
+	 * Función static utilizada para validar los puntos obtenidos para saber
+	 * si es posible dibujar esa figura. El startPoint debe estar más arriba y más
+	 * a la izquierda que el endPoint.
+	 * @param startPoint El punto de inicio o topLeft.
+	 * @param endPoint El punto final o bottomRight.
+	 * @return Retorna Verdadero o True en caso de ser válidos y Falso o False
+	 * en caso contrario.
+	 */
+	public static boolean isValid(Point startPoint, Point endPoint) {
+		return startPoint != null && startPoint.getX() < endPoint.getX() && startPoint.getY() < endPoint.getY();
 	}
 
 }

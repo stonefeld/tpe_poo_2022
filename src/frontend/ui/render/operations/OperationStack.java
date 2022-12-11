@@ -26,6 +26,11 @@ public class OperationStack {
 		return redoStack.peek();
 	}
 
+	/**
+	 * Agrega una nueva operación a la pila de deshacer o undo. Al realizar una nueva operación
+	 * la pila de rehacer o redo debe limpiarse.
+	 * @param operation La última operación realizada a agregar en la pila de deshacer o undo.
+	 */
 	public void addOperation(Operation operation) {
 		cleanRedoStack();
 		undoStack.push(operation);
@@ -37,6 +42,13 @@ public class OperationStack {
 		setUndoRedoLabelText();
 	}
 
+	/**
+	 * Función de deshacer o undo, donde la última operación del stack es utilizada para sobreescribir el
+	 * estado actual del canvas, mientras que el estado actual es metido en la pila de rehacer o redo.
+	 * @param list La copia de la lista de figuras obtenidas del canvasState.
+	 * @param copied La figura copiada obtenida del canvasState.
+	 * @return La operación obtenida de la pila de deshacer o undo para sobreescribir en el canvasState.
+	 */
 	public Operation undo(List<FigureRender<? extends Figure>> list, FigureRender<? extends Figure> copied) {
 		Operation ret = undoStack.pop();
 		redoStack.push(new Operation(list, ret.toString(), copied));
@@ -44,6 +56,13 @@ public class OperationStack {
 		return ret;
 	}
 
+	/**
+	 * Función de rehacer o redo, donde la última operación del stack es utilizada para sobreescribir el
+	 * estado actual del canvas, mientras que el estado actual es metido en la pila de deshacer o undo.
+	 * @param list La copia de la lista de figuras obtenidas del canvasState.
+	 * @param copied La figura copiada obtenida del canvasState.
+	 * @return La operación obtenida de la pila de rehacer o redo para sobreescribir en el canvasState.
+	 */
 	public Operation redo(List<FigureRender<? extends Figure>> list, FigureRender<? extends Figure> copied) {
 		Operation ret = redoStack.pop();
 		undoStack.push(new Operation(list, ret.toString(), copied));
