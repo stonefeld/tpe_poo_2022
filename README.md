@@ -28,7 +28,7 @@ El programa consta de una aplicación de dibujo, estilo Paint de Microsoft, el c
 Para la fácil separación del front-end y el back-end, estos dos se encuentran totalmente separados. Dentro del front-end se encuentran diferentes archivos, los cuales se encargarán de todo tipo de acción o experiencia con el usuario, y dentro del back-end se podrá encontrar todo el procesamiento interno que realiza el programa.
 
 #### Front-end
-Recorriendo el front-end nos encontramos con todos los archivos tipo java encargados de la composición del “Frame”. Tambien tenemos la clase “CanvasState” cuya funcionalidad es todo procesamiento que ocurra en el canvas.
+Recorriendo el front-end nos encontramos con todos los archivos tipo java encargados de la composición del “Frame”. Tambien tenemos la clase “CanvasState”, cuya funcionalidad es todo procesamiento que ocurre en el canvas.
 
 Se tiene una lista de las figuras presentes en la pantalla, tal que se vuelven sencillas las actividades como eliminar y agregar distintas figuras, como también copiar el formato de las mismas.
 
