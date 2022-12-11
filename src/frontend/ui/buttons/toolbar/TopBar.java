@@ -102,8 +102,9 @@ public class TopBar extends VBox {
 	private void redoButtonAction(ActionEvent actionEvent){
 		if(!stack.redoStackEmpty()) {
 			Operation redoOperation = stack.redo();
-			stack.pushToUndoStack(new Operation(canvasState.getRenderList(), redoOperation.toString()));
+			stack.addOperation(new Operation(canvasState.getRenderList(), redoOperation.toString()));
 			canvasState.setRenderList(redoOperation.getState());
+			canvasState.deselectFigure();
 			redrawCanvas.redraw();
 		}
 	}

@@ -33,7 +33,7 @@ public class FigureMouseActionToggleButton<T extends Figure> extends MouseAction
 	public void mouseReleasedAction(Point point) {
 		if (Figure.isValid(startPoint, point)) {
 
-			stack.pushToUndoStack(new Operation(getCanvasState().getRenderList(), "Dibujar una Figura"));
+			stack.addOperation(new Operation(getCanvasState().getRenderList(), "Dibujar una Figura"));
 			stack.cleanRedoStack();
 			getCanvasState().addFigure(sketchCreator.createSketch(startPoint, point, currentStyle));
 			startPoint = null;

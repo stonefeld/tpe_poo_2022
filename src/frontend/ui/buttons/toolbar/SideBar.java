@@ -40,7 +40,7 @@ public class SideBar extends VBox {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 		this.redrawCanvas = redrawCanvas;
-
+		this.stack = canvasState.getStack();
 		setFigureButtons();
 		setUtilityTools();
 	}
@@ -95,8 +95,7 @@ public class SideBar extends VBox {
 		borderColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
 			currentStyle.setBorderColor(borderColorPicker.getValue());
 			if (canvasState.existsSelected()) {
-				stack.cleanRedoStack();
-				stack.pushToUndoStack(new Operation(canvasState.getRenderList(), "Cambiar el color de borde de la figura seleccionada"));
+				stack.addOperation(new Operation(canvasState.getRenderList(), "Cambiar el color de borde de la figura seleccionada"));
 				canvasState.getSelected().getStyle().setBorderColor(currentStyle.getBorderColor());
 				redrawCanvas.redraw();
 			}
@@ -104,8 +103,7 @@ public class SideBar extends VBox {
 		fillColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
 			currentStyle.setFillColor(fillColorPicker.getValue());
 			if (canvasState.existsSelected()) {
-				stack.cleanRedoStack();
-				stack.pushToUndoStack(new Operation(canvasState.getRenderList(), "Cambiar el color de relleno de la figura seleccionada"));
+				stack.addOperation(new Operation(canvasState.getRenderList(), "Cambiar el color de relleno de la figura seleccionada"));
 				canvasState.getSelected().getStyle().setFillColor(currentStyle.getFillColor());
 				redrawCanvas.redraw();
 			}
@@ -116,7 +114,7 @@ public class SideBar extends VBox {
 	}
 
 	private void onActionDeleteButton(ActionEvent event) {
-		stack.pushToUndoStack(new Operation(canvasState.getRenderList(), "Borrar Figura"));
+		stack.addOperation(new Operation(canvasState.getRenderList(), "Borrar Figura"));
 		canvasState.deleteSelected();
 		redrawCanvas.redraw();
 	}
@@ -125,7 +123,6 @@ public class SideBar extends VBox {
 
 
 	private void onActionCopyFormatButton(ActionEvent event) {
-		stack.pushToUndoStack(new Operation(canvasState.getRenderList(), "Copiar Formato"));
 		if (canvasState.existsSelected()) {
 			canvasState.setStyleToCopy();
 			statusPane.updateStatus("Seleccione ahora el elemento que desea aplicarle el formato copiado");

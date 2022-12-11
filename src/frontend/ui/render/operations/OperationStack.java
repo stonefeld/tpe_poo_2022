@@ -1,9 +1,5 @@
 package frontend.ui.render.operations;
 
-import backend.model.Figure;
-import frontend.ui.render.FigureRender;
-
-import java.util.List;
 import java.util.Stack;
 
 public class OperationStack{
@@ -17,7 +13,8 @@ public class OperationStack{
     public Operation peekRedo(){
         return redoStack.peek();
     }
-    public void pushToUndoStack(Operation operation){
+    public void addOperation(Operation operation){
+        cleanRedoStack();
         undoStack.push(operation);
     }
     public void cleanRedoStack(){
@@ -30,16 +27,13 @@ public class OperationStack{
     public Operation undo(){
         return undoStack.pop();
     }
-    public Integer redoSize(){
-        return redoStack.size();
-
+    public Operation redo(){
+        return redoStack.pop();
     }
     public Integer undoSize(){
         return undoStack.size();
     }
-    public Operation redo(){
-       return redoStack.pop();
-    }
+
     public boolean redoStackEmpty() {
         return redoStack.isEmpty();
     }
