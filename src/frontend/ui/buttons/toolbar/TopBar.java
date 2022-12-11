@@ -1,9 +1,10 @@
 package frontend.ui.buttons.toolbar;
 
+import backend.model.Figure;
 import com.sun.javafx.scene.web.skin.HTMLEditorSkin;
 import frontend.CanvasState;
 import frontend.ui.RedrawCanvas;
-import frontend.ui.render.CopyPasteActions;
+import frontend.ui.render.FigureRender;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,6 +12,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -21,7 +24,7 @@ public class TopBar extends VBox {
 	private final CanvasState canvasState;
 	private final RedrawCanvas redrawCanvas;
 
-	public TopBar(CanvasState canvasState, CopyPasteActions cutAction, CopyPasteActions copyAction, CopyPasteActions pasteAction, RedrawCanvas redrawCanvas) {
+	public TopBar(CanvasState canvasState, RedrawCanvas redrawCanvas) {
 		super(10);
 		setPadding(new Insets(5));
 		setStyle("-fx-background-color: #999");
@@ -30,18 +33,30 @@ public class TopBar extends VBox {
 		this.canvasState = canvasState;
 		this.redrawCanvas = redrawCanvas;
 
-		setCopyPasteButtons(cutAction, copyAction, pasteAction);
+		setCopyPasteButtons();
 		setUndoRedoButtons();
 	}
 
-	private void setCopyPasteButtons(CopyPasteActions cutAction, CopyPasteActions copyAction, CopyPasteActions pasteAction) {
+	public void processCode(KeyEvent event) {
+		if (event.isControlDown()) {
+			if (event.getCode() == KeyCode.X) {
+				onActionCutButton();
+			} else if (event.getCode() == KeyCode.C) {
+				onActionCopyButton();
+			} else if (event.getCode() == KeyCode.V) {
+				onActionPasteButton();
+			}
+		}
+	}
+
+	private void setCopyPasteButtons() {
 		Button cutButton = new Button("Cortar", getIcon("cutIcon"));
 		Button copyButton = new Button("Copiar", getIcon("copyIcon"));
 		Button pasteButton = new Button("Pegar", getIcon("pasteIcon"));
 
-		cutButton.setOnAction(event -> cutAction.action());
-		copyButton.setOnAction(event -> copyAction.action());
-		pasteButton.setOnAction(event -> pasteAction.action());
+		cutButton.setOnAction(event -> onActionCutButton());
+		copyButton.setOnAction(event -> onActionCopyButton());
+		pasteButton.setOnAction(event -> onActionPasteButton());
 
 		HBox copyPasteBox = new HBox(10);
 		setHBoxStyle(copyPasteBox);
@@ -70,6 +85,43 @@ public class TopBar extends VBox {
 		undoRedoBox.getChildren().addAll(undoRedoItems);
 		undoRedoBox.setAlignment(Pos.CENTER);
 		getChildren().add(undoRedoBox);
+	}
+
+	/**
+	 * Función encargada de la funcionalidad de corte o cut tanto para la combinación de teclas
+	 * como para los botones en el topBar.
+	 */
+	private void onActionCutButton() {
+		if (canvasState.existsSelected()) {
+			canvasState.addOperation(String.format("Cortar %s", canvasState.getSelected().getFigure().name()));
+			canvasState.copySelected();
+			canvasState.deleteSelected();
+			redrawCanvas.redraw();
+		}
+	}
+
+	/**
+	 * Función encargada de la funcionalidad de copiado o copy tanto para la combinación de teclas
+	 * como para los botones en el topBar.
+	 */
+	private void onActionCopyButton() {
+		if (canvasState.existsSelected()) {
+			canvasState.addOperation(String.format("Copiar %s", canvasState.getSelected().getFigure().name()));
+			canvasState.copySelected();
+		}
+	}
+
+	/**
+	 * Función encargada de la funcionalidad de pegado o paste tanto para la combinación de teclas
+	 * como para los botones en el topBar.
+	 */
+	private void onActionPasteButton() {
+		if (canvasState.existsCopied()) {
+			FigureRender<? extends Figure> aux = canvasState.paste();
+			canvasState.addOperation(String.format("Pegar %s", aux.getFigure().name()));
+			canvasState.addFigure(aux);
+			redrawCanvas.redraw();
+		}
 	}
 
 	private void onActionUndoButton(ActionEvent actionEvent) {

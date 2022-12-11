@@ -23,36 +23,64 @@ public class CanvasState {
 		this.canvasWidth = canvasWidth;
 	}
 
+	/**
+	 * @return Devuelve la altura del canvas.
+	 */
 	public double getCanvasHeight() {
 		return canvasHeight;
 	}
 
+	/**
+	 * @return Devuelve el ancho del canvas.
+	 */
 	public double getCanvasWidth() {
 		return canvasWidth;
 	}
 
+	/**
+	 * Agrega una figura a la lista de figuras para renderizar.
+	 * @param figure Es la figura a ser agregada.
+	 */
 	public void addFigure(FigureRender<? extends Figure> figure) {
 		list.add(figure);
 	}
 
+	/**
+	 * Elimina una figura de la lista de figuras para renderizar.
+	 * @param figure Es la figura a ser eliminada
+	 */
 	public void deleteFigure(FigureRender<? extends Figure> figure) {
 		list.remove(figure);
 	}
 
+	/**
+	 * Utilizada para obtener una copia sobre la cual iterar de las figuras seleccionadas
+	 * para ser renderizadas.
+	 * @return Un Iterable del tipo de las figuras
+	 */
 	public Iterable<FigureRender<? extends Figure>> figures() {
 		return new ArrayList<>(list);
 	}
 
-	// SELECT FIGURE
+	/**
+	 * Elimina la figura que haya estado seleccionada.
+	 */
 	public void deleteSelected() {
 		deleteFigure(selectedFigure);
 		deselectFigure();
 	}
 
+	/**
+	 * Selecciona una figura.
+	 * @param figure La figura a ser seleccionada.
+	 */
 	public void selectFigure(FigureRender<? extends Figure> figure) {
 		selectedFigure = figure;
 	}
 
+	/**
+	 *
+	 */
 	public void deselectFigure() {
 		selectedFigure = null;
 	}
