@@ -94,7 +94,19 @@ public FigureRender<? extends Figure> paste() {
 }
 ```
 
-FALTA LO DE CTRL+X
+Para poder hacer los "shortcuts", por ejemplo CTRL + C para copiar, se tuvo que crear una funcion para ver cuando se apretan estas dos teclas al mismo tiempo. Entonces se configuran callbacks cada vez que se presionan las combianciones de teclas. Una vez que se presiona alguna combiancion de estas teclas se llama a la accion ya creada anteriormente para poder cortar, copiar y pegar utilzando los botones.
+
+```java
+if (event.isControlDown()) {
+	if (event.getCode() == KeyCode.X) {
+		onActionCutButton();
+	} else if (event.getCode() == KeyCode.C) {
+		onActionCopyButton();
+	} else if (event.getCode() == KeyCode.V) {
+		onActionPasteButton();
+	}
+}
+```
 
 ## Tarea 3 - Deshacer y Rehacer
 
