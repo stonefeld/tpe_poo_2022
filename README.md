@@ -2,7 +2,6 @@
 
 ## Tabla de contenidos
 
-* [Autores](#autores)
 * [Objetivo](#objetivo)
 * [Descripción](#descripción)
 * [Funcionamiento](#funcionamiento)
@@ -11,11 +10,6 @@
 * [Tarea 3 - Deshacer y Rehacer](#tarea-3---deshacer-y-rehacer)
 * [Diagrama UML](#diagrama-uml)
 
-## Autores
-
-* Pérez de Gracia, Mateo - Legajo: **63401**
-* Quian Blanco, Francisco - Legajo: **63006**
-* Stanfield, Theo - Legajo: **63403**
 
 ## Objetivo
 
